@@ -32,12 +32,13 @@
     VAR_NUMERO " numero "
     VAR_TEXTO " texto "
     TEXTO ["][.|\n]*["]
-    ENTERO [-]?[0-9]+
+    NUMERO [-]?[0-9]+
+    NOMBRE [a-z|A-Z|0-9|_]+
 
 %%
 
     //sección de reglas
-<patron (exp reg)> <reglas (en c)>
+//<patron (exp reg)> <reglas (en c)>
 [\t] ECHO;
 {FIN_LINEA} return FIN_LINEA;
 
@@ -68,8 +69,9 @@
     {SINO} return SINO;
     {NUMERO} {yylval.number = atoi(yytext); return NUMERO;}
     {TEXTO} {yylval.string = yytext; return TEXTO;}
-    {VAR_ENTERO} return VAR_ENTERO;
+    {VAR_TEXTO} return VAR_TEXTO;
     {VAR_NUMERO} return VAR_NUMERO;
+    {NOMBRE} return NOMBRE;
 . ECHO;
 
 %%
