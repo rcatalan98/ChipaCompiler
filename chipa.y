@@ -50,7 +50,7 @@
 
 
 S: begin CODE end;
-begin: {printf("include \"LinkedList.h\"\n int main() {");};
+begin: {printf("#include \"LinkedList.h\"\n int main() {");};
 
 end: {printf("}");};
 
@@ -132,7 +132,7 @@ declara_y_asigna: VAR_NUMERO NOMBRE '=' NUMERO{
     };
 
 
-print: IMPRIMIR '(' TEXTO ')' { printf("printf(\" %s \")", $3); }; 
+print: IMPRIMIR PARENTESIS_ABRE  TEXTO PARENTESIS_CIERRA { printf("printf(%s);", $3) ; }; 
         | IMPRIMIR '(' NOMBRE ')'{
             struct node* aux;
             if((aux=find($3)) != NULL){

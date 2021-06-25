@@ -26,11 +26,11 @@ COMILLA ["]
 Y " y "
 O " o "
 NO "no "
-IMPRIMIR "imprimir "
+IMPRIMIR "imprimir"
 SINO "sino: "
 VAR_NUMERO "numero "
 VAR_TEXTO "texto "
-TEXTO ["][.|\n]*["]
+TEXTO ["][^\n\r]*["]
 NUMERO [-]?[0-9]+
 NOMBRE [a-z|A-Z|0-9|_]+
 
@@ -75,7 +75,7 @@ NOMBRE [a-z|A-Z|0-9|_]+
 %%
 
 int yyerror(const char * msg){
-    fprintf(stderr, "ERROR: %s en linea %d", msg, yylineno);
+    fprintf(stderr, "ERROR: %s en linea %d\n", msg, yylineno);
     return 0;
 }
 int yywrap(){return(1);}
