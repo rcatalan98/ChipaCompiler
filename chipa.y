@@ -1,4 +1,7 @@
-%{#include "LinkedList.h"%}
+%{#include "LinkedList.h"
+//list* symbolTable;
+list symbolTable;
+%}
 
 
 %token FIN_LINEA 
@@ -15,12 +18,11 @@
 %token MENOR_IGUAL 
 %token MAYOR_IGUAL 
 %token IGUAL 
-%token ASIGNACION
 %token PARENTESIS_ABRE 
 %token PARENTESIS_CIERRA 
 %token MIENTRAS
 %token HAZ 
-%token SI 
+%token SI
 %token COMILLA 
 %token Y
 %token O
@@ -32,6 +34,7 @@
 %token VAR_NUMERO 
 %token VAR_TEXTO 
 %token NOMBRE
+%token FIN
 
 %start S
 
@@ -39,21 +42,19 @@
 
 
 S: begin CODE end;
-begin: {printf("include \"LinkedList.h\"\n
-        int main() {
-            ");};
+begin: {printf("include \"LinkedList.h\"\n int main() {");};
 
 end: {printf("}");};
 
-CODE: | INSTRUCCIÓN FIN_LINEA | CONTROL_LÓGICO;
+CODE: | INSTRUCCION FIN_LINEA | CONTROL_LOGICO;
 
-INSTRUCCIÓN: 
-    DECLARACIÓN {}
+INSTRUCCION: 
+    DECLARACION {}
  //   |DECLARACION '=' valor {$$ = $1 = $3;};
-    |asignación {} 
+    |asignacion {} 
     |print {}
 
-DECLARACIÓN: VAR_NUMERO NOMBRE {
+DECLARACION: VAR_NUMERO NOMBRE {
         if(find($2)!=NULL){
             yyerror("Variable ya definida");
             fprintf(stderr, "La variable ya se definio previamente");
@@ -63,7 +64,7 @@ DECLARACIÓN: VAR_NUMERO NOMBRE {
             insert($2, 0, 1);
         }
     }
-    | VAR_STRING NOMBRE  {     
+    | VAR_TEXTO NOMBRE  {     
         if(find($2)!=NULL){
             yyerror("Variable ya definida");
             fprintf(stderr, "La variable ya se definio previamente");
@@ -72,10 +73,11 @@ DECLARACIÓN: VAR_NUMERO NOMBRE {
         else {
             insert($2, '\0', 0);
         };
+    }
 
-asignación: ASIGNACIÓN_NUM | ASIGNACIÓN_TEXT;
+asignacion: ASIGNACION_NUM | ASIGNACION_TEXT;
 
-ASIGNACIÓN_NUM:  NOMBRE '=' NUMERO{
+ASIGNACION_NUM:  NOMBRE '=' NUMERO{
     struct node* aux;
     if(aux=find($1) != NULL){
         (int)aux->data = $3;
@@ -85,9 +87,9 @@ ASIGNACIÓN_NUM:  NOMBRE '=' NUMERO{
         YYABORT;
     }
 };
-    | NOMBRE '=' operación;
+    | NOMBRE '=' operacion;
 
-ASIGNACIÓN_TEXT:  NOMBRE '=' TEXTO{
+ASIGNACION_TEXT:  NOMBRE '=' TEXTO{
     struct node* aux;
     if(aux=find($1) != NULL){
         (char*)aux->data = $3;
@@ -98,8 +100,8 @@ ASIGNACIÓN_TEXT:  NOMBRE '=' TEXTO{
     }
 };
 
-print: PRINT '(' TEXTO ')' { printf("printf(\" %s \")", $3); }; 
-        | PRINT '(' NOMBRE ')'{
+print: IMPRIMIR '(' TEXTO ')' { printf("printf(\" %s \")", $3); }; 
+        | IMPRIMIR '(' NOMBRE ')'{
             struct node* aux;
             if(aux=find($3) != NULL){
                 if(aux->type == 1)
@@ -111,16 +113,14 @@ print: PRINT '(' TEXTO ')' { printf("printf(\" %s \")", $3); };
                 yyerror("La variable que se intento imprimir no existe");
                 fprintf(stderr, "Error en la linea %d. La variable que se intento imprimir no existe", yylineno);
                 YYABORT;
-            };
+            }
+        };
 
 
-// operación: valor operador valor {
-//     printf("% %c %", ,$2 , )
-//     $$ = $1 $2 $3;
-//     }
-//     | valor operador NOMBRE | NOMBRE operador valor | NOMBRE operador NOMBRE | valor;
+operacion: valor operador valor
+            |parentesis_st_abre operacion parentesis_st_cierra operador valor
+            |valor operador parentesis_st_abre operacion parentesis_st_cierra;
 
-operación: valor | operación operador operación | parentesis_st_abre operación parentesis_st_cierra;
 
 operador: MAS{printf(" + ")};
         |MENOS{printf(" - ")};
@@ -129,7 +129,7 @@ operador: MAS{printf(" + ")};
         |MOD{printf(" % ")};
 
 parentesis_st_abre: PARENTESIS_ABRE{printf(" ( ")};
-parentesis_st_abre: PARENTESIS_CIERRA{printf(" ) ")};
+parentesis_st_cierra: PARENTESIS_CIERRA{printf(" ) ")};
 
 valor: NOMBRE {
     struct node* aux;
@@ -145,18 +145,13 @@ valor: NOMBRE {
             yyerror("La variable que se intento usar no existe");
             fprintf(stderr, "Error en la linea %d. La variable que se intento usar no existe", yylineno);
             YYABORT; 
-    }
+    } };
 
-}
-    | NUMERO {
-        printf("%d", $1);
-    };
+    | NUMERO {printf("%d", $1)};
 
-SI boolean : CODE FIN
+CONTROL_LOGICO: super_si | super_haz;
 
-CONTROL_LÓGICO: super_si | super_haz;
-
-super_si: si_st sentencia_booleana entonces_haz CODE fin_si
+super_si: si_st sentencia_booleana entonces_haz CODE fin_si;
 
 si_st: SI {printf("if(")};
 
@@ -176,19 +171,27 @@ mientras_st: MIENTRAS {printf("while(")};
 fin_mientras: FIN_LINEA {printf(");\n")};
 
 
-sentencia_booleana: boolean | sentencia_booleana sentencia_lógica sentencia_booleana | sentencia_not sentencia_booleana | sentencia_comparativa;
+sentencia_booleana: boolean
+        |boolean sentencia_logica boolean
+        |parentesis_st_abre sentencia_booleana parentesis_st_cierra sentencia_logica boolean
+        |boolean sentencia_logica parentesis_st_abre sentencia_booleana parentesis_st_cierra
+        |sentencia_not parentesis_st_abre sentencia_booleana parentesis_st_cierra
+        |sentencia_not boolean
+        |sentencia_comparativa;
 
-sentencia_lógica: Y {printf("&&");}
+sentencia_logica: Y {printf("&&");}
         | O {printf("||");};
 
-sentencia_not: {printf("!");}
+sentencia_not: NO {printf("!");}
         | NO sentencia_not;
 
 boolean: VERDADERO{printf("1");}
         | FALSO{printf("0");};
 
-sentencia_comparativa: valor comparador valor | valor comparador NOMBRE | NOMBRE comparador valor | NOMBRE comparador NOMBRE;
-
+sentencia_comparativa: valor comparador valor;
+        |parentesis_st_abre operacion parentesis_st_cierra comparador valor;
+        |valor comparador parentesis_st_abre operacion parentesis_st_cierra;
+                        
 comparador: MENOR {printf("<");}
         | MAYOR {printf(">");}
         | MAYOR_IGUAL {printf(">=");}
@@ -196,6 +199,10 @@ comparador: MENOR {printf("<");}
         | IGUAL{printf("==");};
 
 
-
-
 %%
+
+
+int main(void) {
+    //list* symbolTable = (list*) malloc(sizeof(list));
+    yyparse();
+}

@@ -12,11 +12,11 @@ struct node {
    struct node *next;
 };
 
-typedef struct list{
-    node* first=NULL;
-    node* last=NULL;
-    int size=0;
-}list;
+//typedef struct list{
+//    node* first=NULL;
+//    node* last=NULL;
+//    int size=0;
+//}list;
 
 //void printList();
 

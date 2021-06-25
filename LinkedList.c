@@ -1,6 +1,8 @@
-//struct node *head = NULL;
-//struct node *current = NULL;
 #include "LinkedList.h"
+
+struct node* listHead = NULL;
+struct node* listTail = NULL;
+int listSize = 0;
 
 enum type {num = 1, text = 0}; 
 
@@ -11,13 +13,15 @@ void insert(char * key, void * data, int type) {
 	
     strcpy(aux->key, key);
     memcpy(aux->data, data);
+    aux->type = type;
 
-    if(list->size == 0) {
-        list->first = list->last = aux;
+    if(listSize == 0) {
+        listHead = listTail = aux;
     } else {
-        list->last->next = aux;
+        listTail->next = aux;
+        listTail = aux;
     }
-    list->size++;
+    listSize++;
 }
 
 //delete first item
