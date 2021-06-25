@@ -68,14 +68,11 @@
 
 /* First part of user prologue.  */
 #line 1 "chipa.y"
+#include "LinkedList.h"
+//list* symbolTable;
+list symbolTable;
 
-    #include "LinkedList.h"
-
-    void yyerror(const char *s);
-    
-    int yylex();
-
-#line 79 "y.tab.c"
+#line 76 "chipa.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -98,10 +95,7 @@
 #  endif
 # endif
 
-/* Use api.header.include to #include this header
-   instead of duplicating it here.  */
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
+
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -153,56 +147,10 @@ extern int yydebug;
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
-/* Token kinds.  */
-#define YYEMPTY -2
-#define YYEOF 0
-#define YYerror 256
-#define YYUNDEF 257
-#define FIN_LINEA 258
-#define DOS_PUNTOS 259
-#define MAS 260
-#define MENOS 261
-#define POR 262
-#define DIVIDIDO 263
-#define MOD 264
-#define VERDADERO 265
-#define FALSO 266
-#define MENOR 267
-#define MAYOR 268
-#define MENOR_IGUAL 269
-#define MAYOR_IGUAL 270
-#define IGUAL 271
-#define PARENTESIS_ABRE 272
-#define PARENTESIS_CIERRA 273
-#define MIENTRAS 274
-#define HAZ 275
-#define SI 276
-#define COMILLA 277
-#define Y 278
-#define O 279
-#define NO 280
-#define IMPRIMIR 281
-#define SINO 282
-#define NUMERO 283
-#define TEXTO 284
-#define VAR_NUMERO 285
-#define VAR_TEXTO 286
-#define NOMBRE 287
-#define FIN 288
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-union YYSTYPE
-{
-#line 9 "chipa.y"
-
-    char* texto;
-    int numero;
-
-#line 203 "y.tab.c"
-
-};
-typedef union YYSTYPE YYSTYPE;
+typedef int YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -212,7 +160,7 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+
 /* Symbol kind.  */
 enum yysymbol_kind_t
 {
@@ -670,13 +618,13 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    52,    52,    53,    55,    57,    57,    57,    60,    61,
-      62,    63,    65,    75,    86,    86,    88,    98,   100,   112,
-     123,   135,   136,   153,   155,   156,   157,   158,   159,   161,
-     162,   164,   182,   183,   185,   185,   187,   189,   191,   193,
-     196,   198,   200,   202,   204,   207,   208,   209,   210,   211,
-     212,   213,   215,   216,   218,   219,   221,   222,   224,   226,
-     227,   228,   229,   230
+       0,    43,    43,    44,    46,    48,    48,    48,    51,    52,
+      53,    54,    56,    66,    77,    77,    79,    89,    91,   102,
+     113,   125,   126,   142,   144,   145,   146,   147,   148,   150,
+     151,   153,   169,   170,   172,   172,   174,   176,   178,   180,
+     183,   185,   187,   189,   191,   194,   195,   196,   197,   198,
+     199,   200,   202,   203,   205,   206,   208,   209,   211,   213,
+     214,   215,   216,   217
 };
 #endif
 
@@ -1326,144 +1274,143 @@ yyreduce:
   switch (yyn)
     {
   case 3: /* begin: %empty  */
-#line 53 "chipa.y"
+#line 44 "chipa.y"
        {printf("include \"LinkedList.h\"\n int main() {");}
-#line 1332 "y.tab.c"
+#line 1280 "chipa.tab.c"
     break;
 
   case 4: /* end: %empty  */
-#line 55 "chipa.y"
+#line 46 "chipa.y"
      {printf("}");}
-#line 1338 "y.tab.c"
+#line 1286 "chipa.tab.c"
     break;
 
   case 8: /* INSTRUCCION: DECLARACION  */
-#line 60 "chipa.y"
+#line 51 "chipa.y"
                 {}
-#line 1344 "y.tab.c"
+#line 1292 "chipa.tab.c"
     break;
 
   case 9: /* INSTRUCCION: asignacion  */
-#line 61 "chipa.y"
+#line 52 "chipa.y"
                 {}
-#line 1350 "y.tab.c"
+#line 1298 "chipa.tab.c"
     break;
 
   case 10: /* INSTRUCCION: declara_y_asigna  */
-#line 62 "chipa.y"
+#line 53 "chipa.y"
                       {}
-#line 1356 "y.tab.c"
+#line 1304 "chipa.tab.c"
     break;
 
   case 11: /* INSTRUCCION: print  */
-#line 63 "chipa.y"
+#line 54 "chipa.y"
            {}
-#line 1362 "y.tab.c"
+#line 1310 "chipa.tab.c"
     break;
 
   case 12: /* DECLARACION: VAR_NUMERO NOMBRE  */
-#line 65 "chipa.y"
+#line 56 "chipa.y"
                                {
-        if(find((yyvsp[0].texto))!=NULL){
+        if(find(yyvsp[0])!=NULL){
             yyerror("Variable ya definida");
             fprintf(stderr, "La variable ya se definio previamente");
             YYABORT;
         }
         else {
-            insert((yyvsp[0].texto), 0, 1);
+            insert(yyvsp[0], 0, 1);
         }
     }
-#line 1377 "y.tab.c"
+#line 1325 "chipa.tab.c"
     break;
 
   case 13: /* DECLARACION: VAR_TEXTO NOMBRE  */
-#line 75 "chipa.y"
+#line 66 "chipa.y"
                         {     
-        if(find((yyvsp[0].texto)) != NULL){
+        if(find(yyvsp[0]) != NULL){
             yyerror("Variable ya definida");
             fprintf(stderr, "La variable ya se definio previamente");
             YYABORT;
         }
         else {
-            insert((yyvsp[0].texto), '\0', 0);
+            insert(yyvsp[0], '\0', 0);
         };
     }
-#line 1392 "y.tab.c"
+#line 1340 "chipa.tab.c"
     break;
 
   case 16: /* ASIGNACION_NUM: NOMBRE '=' NUMERO  */
-#line 88 "chipa.y"
+#line 79 "chipa.y"
                                   {
     struct node* aux;
-    if((aux=find((yyvsp[-2].texto))) != NULL){
-        aux->data = (void *) &((yyvsp[0].numero));
+    if(aux=find(yyvsp[-2]) != NULL){
+        aux->data = (void *) yyvsp[0];
     }else{
         yyerror("La variable que se intento asignar no existe");
         fprintf(stderr, "La variable que se intento asignar no existe");
         YYABORT;
     }
 }
-#line 1407 "y.tab.c"
+#line 1355 "chipa.tab.c"
     break;
 
   case 18: /* ASIGNACION_TEXT: NOMBRE '=' TEXTO  */
-#line 100 "chipa.y"
+#line 91 "chipa.y"
                                   {
     struct node* aux;
-    if((aux=find((yyvsp[-2].texto))) != NULL){
-        aux->data = (void *)(yyvsp[0].texto);
+    if(aux=find(yyvsp[-2]) != NULL){
+        aux->data = (*void) yyvsp[0];
     }else{
         yyerror("La variable que se intento asignar no existe");
-        //fprintf(stderr, "Error en la linea %d. La variable que se intento asignar no existe", yylineno);
-        fprintf(stderr, "Error en alguna linea, capo. La variable que se intento asignar no existe");
+        fprintf(stderr, "Error en la linea %d. La variable que se intento asignar no existe", yylineno);
         YYABORT;
     }
 }
-#line 1423 "y.tab.c"
+#line 1370 "chipa.tab.c"
     break;
 
   case 19: /* declara_y_asigna: VAR_NUMERO NOMBRE '=' NUMERO  */
-#line 112 "chipa.y"
+#line 102 "chipa.y"
                                               {
     struct node* aux;
-        if(find((yyvsp[-2].texto))!=NULL){
+        if(find(yyvsp[-2])!=NULL){
             yyerror("Variable ya definida");
             fprintf(stderr, "La variable ya se definio previamente");
             YYABORT;
         }
         else {
-            insert((yyvsp[-2].texto), &((yyvsp[0].numero)), 1);
+            insert(yyvsp[-2], yyvsp[0], 1);
         }
     }
-#line 1439 "y.tab.c"
+#line 1386 "chipa.tab.c"
     break;
 
   case 20: /* declara_y_asigna: VAR_TEXTO NOMBRE '=' TEXTO  */
-#line 123 "chipa.y"
+#line 113 "chipa.y"
                                {
-        if(find((yyvsp[-2].texto))!=NULL){
+        if(find(yyvsp[-2])!=NULL){
             yyerror("Variable ya definida");
             fprintf(stderr, "La variable ya se definio previamente");
             YYABORT;
         }
         else {
-            insert((yyvsp[-2].texto), (yyvsp[0].texto), 0);
+            insert(yyvsp[-2], yyvsp[0], 0);
         }
     }
-#line 1454 "y.tab.c"
+#line 1401 "chipa.tab.c"
     break;
 
   case 21: /* print: IMPRIMIR '(' TEXTO ')'  */
-#line 135 "chipa.y"
-                              { printf("printf(\" %s \")", (yyvsp[-1].texto)); }
-#line 1460 "y.tab.c"
+#line 125 "chipa.y"
+                              { printf("printf(\" %s \")", yyvsp[-1]); }
+#line 1407 "chipa.tab.c"
     break;
 
   case 22: /* print: IMPRIMIR '(' NOMBRE ')'  */
-#line 136 "chipa.y"
+#line 126 "chipa.y"
                                  {
             struct node* aux;
-            if((aux=find((yyvsp[-1].texto))) != NULL){
+            if((aux=find(yyvsp[-1])) != NULL){
                 if(aux->type == 1)
                     printf("printf(\" %d \")", aux->data);
                 if(aux->type == 0)
@@ -1471,188 +1418,185 @@ yyreduce:
                     
             } else {
                 yyerror("La variable que se intento imprimir no existe");
-                //fprintf(stderr, "Error en la linea %d. La variable que se intento imprimir no existe", yylineno);
-                fprintf(stderr, "Error en alguna linea, capo. La variable que se intento asignar no existe");
+                fprintf(stderr, "Error en la linea %d. La variable que se intento imprimir no existe", yylineno);
                 YYABORT;
             }
         }
-#line 1480 "y.tab.c"
+#line 1426 "chipa.tab.c"
     break;
 
   case 24: /* operador: MAS  */
-#line 155 "chipa.y"
+#line 144 "chipa.y"
              {printf(" + ");}
-#line 1486 "y.tab.c"
+#line 1432 "chipa.tab.c"
     break;
 
   case 25: /* operador: MENOS  */
-#line 156 "chipa.y"
+#line 145 "chipa.y"
               {printf(" - ");}
-#line 1492 "y.tab.c"
+#line 1438 "chipa.tab.c"
     break;
 
   case 26: /* operador: POR  */
-#line 157 "chipa.y"
+#line 146 "chipa.y"
             {printf(" * ");}
-#line 1498 "y.tab.c"
+#line 1444 "chipa.tab.c"
     break;
 
   case 27: /* operador: DIVIDIDO  */
-#line 158 "chipa.y"
+#line 147 "chipa.y"
                  {printf(" / ");}
-#line 1504 "y.tab.c"
+#line 1450 "chipa.tab.c"
     break;
 
   case 28: /* operador: MOD  */
-#line 159 "chipa.y"
+#line 148 "chipa.y"
             {printf(" % ");}
-#line 1510 "y.tab.c"
+#line 1456 "chipa.tab.c"
     break;
 
   case 29: /* parentesis_st_abre: PARENTESIS_ABRE  */
-#line 161 "chipa.y"
+#line 150 "chipa.y"
                                    {printf(" ( ");}
-#line 1516 "y.tab.c"
+#line 1462 "chipa.tab.c"
     break;
 
   case 30: /* parentesis_st_cierra: PARENTESIS_CIERRA  */
-#line 162 "chipa.y"
+#line 151 "chipa.y"
                                        {printf(" ) ");}
-#line 1522 "y.tab.c"
+#line 1468 "chipa.tab.c"
     break;
 
   case 31: /* valor: NOMBRE  */
-#line 164 "chipa.y"
+#line 153 "chipa.y"
               {
     struct node* aux;
-    if((aux=find((yyvsp[0].texto))) != NULL) {
+    if((aux=find(yyvsp[0])) != NULL) {
         if(aux->type != 1){
             yyerror("La variable que se intento usar no es un numero");
-            //fprintf(stderr, "Error en la linea %d. La variable que se intento usar no es un numero", yylineno);
-            fprintf(stderr, "Error en alguna linea, capo. La variable que se intento asignar no existe");        
+            fprintf(stderr, "Error en la linea %d. La variable que se intento usar no es un numero", yylineno);
             YYABORT; 
         } else {
-            printf("%s", (yyvsp[0].texto));
+            printf("%s", yyvsp[0]);
         }
     } else {
             yyerror("La variable que se intento usar no existe");
-            //fprintf(stderr, "Error en la linea %d. La variable que se intento usar no existe", yylineno);
-            fprintf(stderr, "Error en alguna linea, capo. La variable que se intento asignar no existe");        
+            fprintf(stderr, "Error en la linea %d. La variable que se intento usar no existe", yylineno);
             YYABORT; 
     } }
-#line 1544 "y.tab.c"
+#line 1488 "chipa.tab.c"
     break;
 
   case 32: /* valor: NUMERO  */
-#line 182 "chipa.y"
-             {printf("%d", (yyvsp[0].numero));}
-#line 1550 "y.tab.c"
+#line 169 "chipa.y"
+             {printf("%d", yyvsp[0]);}
+#line 1494 "chipa.tab.c"
     break;
 
   case 37: /* si_st: SI  */
-#line 189 "chipa.y"
+#line 176 "chipa.y"
           {printf("if(");}
-#line 1556 "y.tab.c"
+#line 1500 "chipa.tab.c"
     break;
 
   case 38: /* entonces_haz: ':'  */
-#line 191 "chipa.y"
+#line 178 "chipa.y"
                   {printf("){\n");}
-#line 1562 "y.tab.c"
+#line 1506 "chipa.tab.c"
     break;
 
   case 39: /* fin_si: FIN  */
-#line 193 "chipa.y"
+#line 180 "chipa.y"
             {printf("}\n");}
-#line 1568 "y.tab.c"
+#line 1512 "chipa.tab.c"
     break;
 
   case 41: /* haz_st: HAZ  */
-#line 198 "chipa.y"
+#line 185 "chipa.y"
             {printf("do{");}
-#line 1574 "y.tab.c"
+#line 1518 "chipa.tab.c"
     break;
 
   case 42: /* fin_haz: FIN  */
-#line 200 "chipa.y"
+#line 187 "chipa.y"
              {printf("}\n");}
-#line 1580 "y.tab.c"
+#line 1524 "chipa.tab.c"
     break;
 
   case 43: /* mientras_st: MIENTRAS  */
-#line 202 "chipa.y"
+#line 189 "chipa.y"
                       {printf("while(");}
-#line 1586 "y.tab.c"
+#line 1530 "chipa.tab.c"
     break;
 
   case 44: /* fin_mientras: FIN_LINEA  */
-#line 204 "chipa.y"
+#line 191 "chipa.y"
                         {printf(");\n");}
-#line 1592 "y.tab.c"
+#line 1536 "chipa.tab.c"
     break;
 
   case 52: /* sentencia_logica: Y  */
-#line 215 "chipa.y"
+#line 202 "chipa.y"
                     {printf("&&");}
-#line 1598 "y.tab.c"
+#line 1542 "chipa.tab.c"
     break;
 
   case 53: /* sentencia_logica: O  */
-#line 216 "chipa.y"
+#line 203 "chipa.y"
             {printf("||");}
-#line 1604 "y.tab.c"
+#line 1548 "chipa.tab.c"
     break;
 
   case 54: /* sentencia_not: NO  */
-#line 218 "chipa.y"
+#line 205 "chipa.y"
                   {printf("!");}
-#line 1610 "y.tab.c"
+#line 1554 "chipa.tab.c"
     break;
 
   case 56: /* boolean: VERDADERO  */
-#line 221 "chipa.y"
+#line 208 "chipa.y"
                   {printf("1");}
-#line 1616 "y.tab.c"
+#line 1560 "chipa.tab.c"
     break;
 
   case 57: /* boolean: FALSO  */
-#line 222 "chipa.y"
+#line 209 "chipa.y"
                {printf("0");}
-#line 1622 "y.tab.c"
+#line 1566 "chipa.tab.c"
     break;
 
   case 59: /* comparador: MENOR  */
-#line 226 "chipa.y"
+#line 213 "chipa.y"
                   {printf("<");}
-#line 1628 "y.tab.c"
+#line 1572 "chipa.tab.c"
     break;
 
   case 60: /* comparador: MAYOR  */
-#line 227 "chipa.y"
+#line 214 "chipa.y"
                 {printf(">");}
-#line 1634 "y.tab.c"
+#line 1578 "chipa.tab.c"
     break;
 
   case 61: /* comparador: MAYOR_IGUAL  */
-#line 228 "chipa.y"
+#line 215 "chipa.y"
                       {printf(">=");}
-#line 1640 "y.tab.c"
+#line 1584 "chipa.tab.c"
     break;
 
   case 62: /* comparador: MENOR_IGUAL  */
-#line 229 "chipa.y"
+#line 216 "chipa.y"
                       {printf("<=");}
-#line 1646 "y.tab.c"
+#line 1590 "chipa.tab.c"
     break;
 
   case 63: /* comparador: IGUAL  */
-#line 230 "chipa.y"
+#line 217 "chipa.y"
                {printf("==");}
-#line 1652 "y.tab.c"
+#line 1596 "chipa.tab.c"
     break;
 
 
-#line 1656 "y.tab.c"
+#line 1600 "chipa.tab.c"
 
       default: break;
     }
@@ -1846,7 +1790,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 233 "chipa.y"
+#line 220 "chipa.y"
 
 
 
