@@ -18,7 +18,7 @@ struct node {
 //    int size=0;
 //}list;
 
-//void printList();
+void printList();
 
 void insert(char * key, void * data, int type);
 
@@ -26,8 +26,8 @@ bool isEmpty();
 
 int length();
 
-int find(char * key);
+struct node* find(char * key);
 
-int getValueInt;
+int getValueInt();
 
-char* getValueString;
+char* getValueString();

@@ -117,10 +117,7 @@ print: IMPRIMIR '(' TEXTO ')' { printf("printf(\" %s \")", $3); };
         };
 
 
-operacion: valor operador valor
-            |parentesis_st_abre operacion parentesis_st_cierra operador valor
-            |valor operador parentesis_st_abre operacion parentesis_st_cierra;
-
+operacion: valor operador valor;
 
 operador: MAS{printf(" + ")};
         |MENOS{printf(" - ")};
@@ -148,6 +145,7 @@ valor: NOMBRE {
     } };
 
     | NUMERO {printf("%d", $1)};
+    | parentesis_st_abre operacion parentesis_st_cierra;
 
 CONTROL_LOGICO: super_si | super_haz;
 
@@ -189,8 +187,6 @@ boolean: VERDADERO{printf("1");}
         | FALSO{printf("0");};
 
 sentencia_comparativa: valor comparador valor;
-        |parentesis_st_abre operacion parentesis_st_cierra comparador valor;
-        |valor comparador parentesis_st_abre operacion parentesis_st_cierra;
                         
 comparador: MENOR {printf("<");}
         | MAYOR {printf(">");}

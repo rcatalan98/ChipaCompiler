@@ -1,27 +1,40 @@
 #include "LinkedList.h"
 
-struct node* listHead = NULL;
-struct node* listTail = NULL;
+struct node* listFirst = NULL;
+struct node* listLast = NULL;
 int listSize = 0;
-
-enum type {num = 1, text = 0}; 
 
 //insert at the first location
 void insert(char * key, void * data, int type) {
    //create aux node
-   struct node* aux = (struct node*) malloc(sizeof(struct node));
+
+   struct node* aux = (struct node*) malloc(sizeof(struct node *));
+   aux->key = (char *) malloc(sizeof(char *));
 	
-    strcpy(aux->key, key);
-    memcpy(aux->data, data);
-    aux->type = type;
+    strcpy((char *)aux->key,(char *) key);
+
+     if(type == num) {
+         aux->data = (char *) malloc(sizeof(int *));
+         memcpy(aux->data, data, sizeof(int) * sizeof( *data) );
+     } else if(type == text) {
+        int len = strlen( (char *) data);
+         aux->data = (char *) malloc(sizeof(char *));
+         memcpy(aux->data, data, sizeof(char) * len );
+     }
+
+   
+   memcpy(aux->data, data,sizeof( *data) );
+    
+   aux->type = type;
 
     if(listSize == 0) {
-        listHead = listTail = aux;
+        listFirst = listLast = aux;
     } else {
-        listTail->next = aux;
-        listTail = aux;
+        listLast->next = aux;
+        listLast = aux;
     }
     listSize++;
+    
 }
 
 //delete first item
@@ -39,18 +52,18 @@ void insert(char * key, void * data, int type) {
 
 //is list empty
 bool isEmpty() {
-   return list->size == 0;
+   return listSize == 0;
 }
 
 int length() {
-    return list->size;
+    return listSize;
 }
 
 //find a link with given key
 struct node* find(char * key) {
 
    //start from the first link
-   struct node* aux = list->first;
+   struct node* aux = listFirst;
    
    if(isEmpty())
    {
@@ -73,6 +86,7 @@ struct node* find(char * key) {
    return aux;
 }
 
+//este NO usamos ni tocamos, no debería ni andar:
 //delete a link with given key
 // struct node* delete(char * key) {
 
@@ -111,129 +125,52 @@ struct node* find(char * key) {
 //    return current;
 // }
 
-// void sort() {
 
-//    int i, j, k, tempKey, tempData;
-//    struct node *current;
-//    struct node *next;
-	
-//    int size = length();
-//    k = size ;
-	
-//    for ( i = 0 ; i < size - 1 ; i++, k-- ) {
-//       current = head;
-//       next = head->next;
-		
-//       for ( j = 1 ; j < k ; j++ ) {   
-
-//          if ( current->data > next->data ) {
-//             tempData = current->data;
-//             current->data = next->data;
-//             next->data = tempData;
-
-//             tempKey = current->key;
-//             current->key = next->key;
-//             next->key = tempKey;
-//          }
-			
-//          current = current->next;
-//          next = next->next;
-//       }
-//    }   
-// }
-
-// void reverse(struct node** head_ref) {
-//    struct node* prev   = NULL;
-//    struct node* current = *head_ref;
-//    struct node* next;
-	
-//    while (current != NULL) {
-//       next  = current->next;
-//       current->next = prev;   
-//       prev = current;
-//       current = next;
-//    }
-	
-//    *head_ref = prev;
-// }
-
+/*
 //display the list
-// void printList() {
-//    struct node *ptr = head;
-//    printf("\n[ ");
+void printList() {
+   struct node *ptr = listFirst;
+   printf("\n[ ");
 	
-//    //start from the beginning
-//    while(ptr != NULL) {
-//       printf("(%d,%d) ",ptr->key,ptr->data);
-//       ptr = ptr->next;
-//    }
-	
-//    printf(" ]");
-// }
+   int i;
 
-/* void main() {
-   insertFirst(1,10);
-   insertFirst(2,20);
-   insertFirst(3,30);
-   insertFirst(4,1);
-   insertFirst(5,40);
-   insertFirst(6,56); 
+   //start from the beginning
+   for(i=0; i<listSize; i++) {
+      
+      if(ptr->type == num){
+         printf("(nombre:%s, valor:%d) \n",ptr->key, *((int *) (ptr->data)));
+      }
+      if(ptr->type == text){
+         printf("(nombre:%s, valor:%s) \n",ptr->key, (char *) ptr->data);
+      }
+      ptr = ptr->next;
+   }
 
-   printf("Original List: "); 
-	
-   //print list
-   printList();
+   printf(" ]");
+}
 
-   while(!isEmpty()) {            
-      struct node *temp = deleteFirst();
-      printf("\nDeleted value:");
-      printf("(%d,%d) ",temp->key,temp->data);
-   }  
-	
-   printf("\nList after deleting all items: ");
-   printList();
-   insertFirst(1,10);
-   insertFirst(2,20);
-   insertFirst(3,30);
-   insertFirst(4,1);
-   insertFirst(5,40);
-   insertFirst(6,56);
+int main() {
+   printf("hola mundo\n");
+   //printList();
+   //insert(char * key, void * data, int type);
    
-   printf("\nRestored List: ");
-   printList();
-   printf("\n");  
+//keys
 
-   struct node *foundLink = find(4);
-	
-   if(foundLink != NULL) {
-      printf("Element found: ");
-      printf("(%d,%d) ",foundLink->key,foundLink->data);
-      printf("\n");  
-   } else {
-      printf("Element not found.");
-   }
+   char * key1 = "var1";
+   char * key2 = "var2";
+   char * key3 = "var3";
 
-   delete(4);
-   printf("List after deleting an item: ");
+
+
+//data
+   int valor1=42069;
+   char* valor2="valor2";
+   char* valor3="valor3";
+
+   insert(key1, &valor1, num);
+   insert(key2, valor2, text);
+   insert(key3, valor3, text);
    printList();
-   printf("\n");
-   foundLink = find(4);
-	
-   if(foundLink != NULL) {
-      printf("Element found: ");
-      printf("(%d,%d) ",foundLink->key,foundLink->data);
-      printf("\n");
-   } else {
-      printf("Element not found.");
-   }
-	
-   printf("\n");
-   sort();
-	
-   printf("List after sorting the data: ");
-   printList();
-	
-   reverse(&head);
-   printf("\nList after reversing the data: ");
-   printList();
-} */
+// return 0;
+}
+*/
