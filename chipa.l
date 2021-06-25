@@ -78,3 +78,4 @@ int yyerror(const char * msg){
     fprintf(stderr, "ERROR: %s en linea %d", msg, yylineno);
     return 0;
 }
+int yywrap(){return(1);}
