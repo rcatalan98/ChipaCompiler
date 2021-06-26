@@ -10,3 +10,4 @@ clean:
 test:
 	./chipa.out < test.chipa > salida.c
 	gcc -w salida.c LinkedList.c -o ejecutable
+	

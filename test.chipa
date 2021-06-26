@@ -1,3 +1,9 @@
-texto a;
-imprimir ("hola\n");
-texto b;
+numero a;
+numero b;
+numero c;
+a = 1;
+b = 2;
+c = 3;
+imprimir(a);
+imprimir(b);
+imprimir(c);            

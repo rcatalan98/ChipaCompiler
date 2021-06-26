@@ -20,8 +20,8 @@ MAYOR_IGUAL ">="
 IGUAL "=="
 PARENTESIS_ABRE "("
 PARENTESIS_CIERRA ")"
-MIENTRAS "mientras: "
-HAZ "haz: "
+MIENTRAS "mientras "
+HAZ "haz:"
 SI "si "
 COMILLA ["]
 Y " y "
@@ -34,12 +34,14 @@ VAR_TEXTO "texto "
 TEXTO ["][^\n\r]*["]
 NUMERO [-]?[0-9]+
 NOMBRE [a-z|A-Z|0-9|_]+
+ASIGNACION "="
 
 %%
 [\t] ECHO;
 [\n] {ECHO; yylineno++;};
 
 {FIN_LINEA} return FIN_LINEA;
+{FIN} return FIN;
 
 {DOS_PUNTOS} return DOS_PUNTOS; 
 
@@ -70,7 +72,8 @@ NOMBRE [a-z|A-Z|0-9|_]+
 {TEXTO} {strcpy(yylval.texto, yytext); return TEXTO;}
 {VAR_TEXTO} return VAR_TEXTO;
 {VAR_NUMERO} return VAR_NUMERO;
-{NOMBRE} return NOMBRE;
+{NOMBRE} {strcpy(yylval.texto, yytext); return NOMBRE;}
+{ASIGNACION} return ASIGNACION;
 . ECHO;
 
 %%
