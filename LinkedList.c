@@ -5,13 +5,14 @@ list *createList()
    list *toReturn = malloc(sizeof(list));
    *toReturn = (struct node *)malloc(sizeof(struct node));
    (*toReturn)->next = NULL;
-   (*toReturn)->data = NULL;
-   (*toReturn)->key = "HEAD";
+   char *header = "HEAD";
+   (*toReturn)->key = (char *)malloc(sizeof(strlen(header)));
+   strcpy((*toReturn)->key, header);
    return toReturn;
 }
 
 //insert at the first location
-void insert(list *l, char *key, void *data, int type)
+void insert(list *l, char *key, int type)
 {
    //create aux node
    struct node *aux = (struct node *)malloc(sizeof(struct node));
@@ -19,20 +20,6 @@ void insert(list *l, char *key, void *data, int type)
    aux->key = (char *)malloc(sizeof(char) * keyLen);
 
    strcpy((char *)aux->key, (char *)key);
-
-   if (type == num)
-   {
-      aux->data = (int *)malloc(sizeof(int));
-      memcpy(aux->data, data, sizeof(int));
-   }
-   else if (type == text)
-   {
-      int len = strlen((char *)data);
-      aux->data = (char *)malloc(sizeof(char *));
-      memcpy(aux->data, data, sizeof(char) * len);
-   }
-
-   memcpy(aux->data, data, sizeof(*data));
 
    aux->type = type;
 
@@ -63,7 +50,7 @@ void insert(list *l, char *key, void *data, int type)
 //is list empty
 bool isEmpty(list *l)
 {
-   return (*l)->data == NULL;
+   return (*l)->key == NULL;
 }
 
 //find a link with given key
@@ -147,15 +134,7 @@ void printList(list *l)
    //start from the beginning
    while (ptr != NULL)
    {
-
-      if (ptr->type == num)
-      {
-         printf("(nombre:%s, valor:%d) \n", ptr->key, *((int *)(ptr->data)));
-      }
-      if (ptr->type == text)
-      {
-         printf("(nombre:%s, valor:%s) \n", ptr->key, (char *)ptr->data);
-      }
+      printf("(nombre:%s:", ptr->key);
       ptr = ptr->next;
    }
    printf(" ]\n");
@@ -168,6 +147,7 @@ void freeList(list *l){
    while (aux != NULL)
    {
       next = aux->next;
+      free(aux->key);
       free(aux);
       aux=next;
    }
@@ -190,29 +170,14 @@ void freeList(list *l){
 //    char *valor2 = "valor2";
 //    char *valor3 = "valor3";
 
-//    insert(l, key1, &valor1, num);
+//    insert(l, key1, num);
 //    printf("Se agrego uno\n");
-//    insert(l, key2, valor2, text);
+//    insert(l, key2, text);
 //    printf("Se agrego uno\n");
-//    insert(l, key3, valor3, text);
+//    insert(l, key3,text);
 //    printf("Se agrego uno\n");
 //    printList(l);
-//    printf("El valor del primer nodo es: %s\n", (*l)->next->data);
-//    struct node *a = find(l, "var2");
-  
-//    printf("Se termino el find\n");
-   
-//    if(a==NULL){
-//       printf("a es NULL\n");
-//    }
-
-//    if(a->key == NULL){
-//       printf("a key es null");
-//    }
-   
-//    printf("Deberia funcionar todo\n");
-//    printf("La key es:%s\n", a->key);
-//    printf("el valor es:%s\n", (char *) (a->data));
+//    printf("Se imprimio la lista\n");
 //    freeList(l);
 //    return 0;
 // }

@@ -7,7 +7,6 @@ enum type {num = 1, text = 0};
 
 struct node {
     int type;
-   void * data;
    char * key;
    struct node *next;
 };
@@ -18,7 +17,7 @@ list *createList();
 
 void printList(list *l);
 
-void insert(list* l,char * key, void * data, int type);
+void insert(list* l,char * key, int type);
 
 bool isEmpty();
 

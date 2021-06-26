@@ -52,7 +52,7 @@
 
 
 %type<texto> asignacion_st;
-
+%type<texto> texto_st;
 
 %start S;
 
@@ -75,64 +75,29 @@ INSTRUCCION:
     |declara_y_asigna {}
     |print {};
 
-DECLARACION: VAR_NUMERO NOMBRE {        
-        //printf("printf(\"nombre de var num $2: %s\");\n", $2);
-
-        if(find(l,$2)!=NULL){
-            yyerror("Variable ya definida");
-            fprintf(stderr, "La variable ya se definio previamente");
-            YYABORT;
-        }
-        else {
-            insert(l,$2, &cero, num);
-            printf("int %s;", $2);
-        }
-    }
-    | VAR_TEXTO NOMBRE  {  
-        //printf("printf(\"nombre de var text $2: %s\");\n", $2);
-
-        if(find(l,$2) != NULL){
-            yyerror("Variable ya definida\n");
-            fprintf(stderr, "La variable ya se definio previamente\n");
-            YYABORT;
-        }
-        else {
-            insert(l,$2, empty, text);
-            printf("char * %s;", $2);
-        }
+DECLARACION: dec_nombre_st {        
+        printf(";");
     };
 
-asignacion: ASIGNACION_NUM | ASIGNACION_TEXT;
+asignacion: nombre_st ASIGNACION_NUM | nombre_st ASIGNACION_TEXT;
 
-ASIGNACION_NUM:  NOMBRE ASIGNACION NUMERO{
+ASIGNACION_NUM:  asignacion_st valor{printf(";");};
+
+ASIGNACION_TEXT:  asignacion_st texto_st{printf(";");};
+
+nombre_st: NOMBRE {
     struct node* aux;
-    if((aux=find(l,$1)) != NULL){
-        aux->data = &($3);
-        printf("%s=%d;", $1, $3);
-    }else{
-        yyerror("La variable que se intento asignar no existe");
-        fprintf(stderr, "La variable que se intento asignar no existe");
-        YYABORT;
-    }
-};
-
-nombre_st: NOMBRE {printf("%s", $1);};
-asignacion_st: ASIGNACION {printf("=");};
-
-ASIGNACION_TEXT:  NOMBRE ASIGNACION TEXTO{
-    struct node* aux;
-    if((aux=find(l,$1)) != NULL){
-        aux->data = (void *)$3;
-        printf("%s=%s;", $1, $3);
-    }else{
+    if((aux=find(l,$1)) == NULL){
         yyerror("La variable que se intento asignar no existe");
         //fprintf(stderr, "Error en la linea %d. La variable que se intento asignar no existe", yylineno);
         fprintf(stderr, "Error en alguna linea, capo. La variable que se intento asignar no existe");
         YYABORT;
+    }else{
+        printf("%s", $1);
     }
 };
 
-declara_y_asigna: VAR_NUMERO NOMBRE ASIGNACION NUMERO{
+dec_nombre_st: VAR_NUMERO NOMBRE {
     struct node* aux;
         if(find(l,$2)!=NULL){
             yyerror("Variable ya definida");
@@ -140,21 +105,26 @@ declara_y_asigna: VAR_NUMERO NOMBRE ASIGNACION NUMERO{
             YYABORT;
         }
         else {
-            insert(l,$2, &($4), 1);
-            printf("int %s = %d;", $2, $4);
+            insert(l,$2, num);
+            printf("int %s ", $2);
         }
-    }
-    |VAR_TEXTO NOMBRE ASIGNACION TEXTO{
-        if(find(l,$2)!=NULL){
+}
+| VAR_TEXTO NOMBRE{
+    if(find(l,$2)!=NULL){
             yyerror("Variable ya definida");
             fprintf(stderr, "La variable ya se definio previamente");
             YYABORT;
         }
         else {
-            insert(l,$2, $4, 0);
-            printf("int %s = %s;", $2, $4);
+            insert(l,$2, text);
+            printf("char * %s ", $2);
         }
-    };
+}
+asignacion_st: ASIGNACION {printf("=");};
+texto_st: TEXTO {printf("%s", $1);}
+
+declara_y_asigna: dec_nombre_st ASIGNACION_TEXT 
+    |dec_nombre_st ASIGNACION_NUM;
 
 print: IMPRIMIR PARENTESIS_ABRE  TEXTO  PARENTESIS_CIERRA { printf("printf(%s);", $3) ; }
         | IMPRIMIR PARENTESIS_ABRE NOMBRE PARENTESIS_CIERRA{
@@ -163,7 +133,7 @@ print: IMPRIMIR PARENTESIS_ABRE  TEXTO  PARENTESIS_CIERRA { printf("printf(%s);"
                 if(aux->type == num)
                     printf("printf(\"%%d\", %s);", aux->key);
                 if(aux->type == text)
-                    printf("printf( %s );", aux->data);
+                    printf("printf(\"%%s\", %s);", aux->key);
                     
             } else {
                 yyerror("La variable que se intento imprimir no existe");
@@ -186,28 +156,13 @@ operador: MAS{printf(" + ");}
 parentesis_st_abre: PARENTESIS_ABRE{printf(" ( ");};
 parentesis_st_cierra: PARENTESIS_CIERRA{printf(" ) ");};
 
-valor: NOMBRE {
-    struct node* aux;
-    if((aux=find(l,$1)) != NULL) {
-        if(aux->type != 1){
-            yyerror("La variable que se intento usar no es un numero");
-            //fprintf(stderr, "Error en la linea %d. La variable que se intento usar no es un numero", yylineno);
-            fprintf(stderr, "Error en alguna linea, capo. La variable que se intento asignar no existe");        
-            YYABORT; 
-        } else {
-            printf("%s", $1);
-        }
-    } else {
-            yyerror("La variable que se intento usar no existe");
-            //fprintf(stderr, "Error en la linea %d. La variable que se intento usar no existe", yylineno);
-            fprintf(stderr, "Error en alguna linea, capo. La variable que se intento asignar no existe");        
-            YYABORT; 
-    } }
-
+valor: 
+    nombre_st
     | NUMERO {
         printf("%d", $1);
         };
-    | parentesis_st_abre operacion parentesis_st_cierra;
+    | parentesis_st_abre operacion parentesis_st_cierra
+    | ;
 
 CONTROL_LOGICO: super_si | super_haz;
 

@@ -9,5 +9,5 @@ clean:
 	rm -f *.out *.o lex.yy.c y.tab.c y.tab.h salida.c y.output LinkedList.h.gch ejecutable
 test:
 	./chipa.out < test.chipa > salida.c
-	gcc -w salida.c LinkedList.c -o ejecutable
+	gcc -w salida.c LinkedList.c LinkedList.h -o ejecutable
 	
