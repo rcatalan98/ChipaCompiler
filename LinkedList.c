@@ -216,4 +216,3 @@ void freeList(list *l){
 //    freeList(l);
 //    return 0;
 // }
-o
