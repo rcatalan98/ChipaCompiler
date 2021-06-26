@@ -1,0 +1,1210 @@
+Terminals unused in grammar
+
+    DOS_PUNTOS
+    COMILLA
+    SINO
+
+
+Grammar
+
+    0 $accept: S $end
+
+    1 S: begin CODE end
+
+    2 begin: %empty
+
+    3 end: %empty
+
+    4 CODE: %empty
+    5     | INSTRUCCION FIN_LINEA
+    6     | CONTROL_LOGICO
+
+    7 INSTRUCCION: DECLARACION
+    8            | asignacion
+    9            | declara_y_asigna
+   10            | print
+
+   11 DECLARACION: VAR_NUMERO NOMBRE
+   12            | VAR_TEXTO NOMBRE
+
+   13 asignacion: ASIGNACION_NUM
+   14           | ASIGNACION_TEXT
+
+   15 ASIGNACION_NUM: NOMBRE '=' NUMERO
+   16               | NOMBRE '=' operacion
+
+   17 ASIGNACION_TEXT: NOMBRE '=' TEXTO
+
+   18 declara_y_asigna: VAR_NUMERO NOMBRE '=' NUMERO
+   19                 | VAR_TEXTO NOMBRE '=' TEXTO
+
+   20 print: IMPRIMIR PARENTESIS_ABRE TEXTO PARENTESIS_CIERRA
+   21      | IMPRIMIR '(' NOMBRE ')'
+
+   22 operacion: valor operador valor
+
+   23 operador: MAS
+   24         | MENOS
+   25         | POR
+   26         | DIVIDIDO
+   27         | MOD
+
+   28 parentesis_st_abre: PARENTESIS_ABRE
+
+   29 parentesis_st_cierra: PARENTESIS_CIERRA
+
+   30 valor: NOMBRE
+   31      | NUMERO
+   32      | parentesis_st_abre operacion parentesis_st_cierra
+
+   33 CONTROL_LOGICO: super_si
+   34               | super_haz
+
+   35 super_si: si_st sentencia_booleana entonces_haz CODE fin_si
+
+   36 si_st: SI
+
+   37 entonces_haz: ':'
+
+   38 fin_si: FIN
+
+   39 super_haz: haz_st ':' CODE fin_haz mientras_st sentencia_booleana fin_mientras
+
+   40 haz_st: HAZ
+
+   41 fin_haz: FIN
+
+   42 mientras_st: MIENTRAS
+
+   43 fin_mientras: FIN_LINEA
+
+   44 sentencia_booleana: boolean
+   45                   | boolean sentencia_logica boolean
+   46                   | parentesis_st_abre sentencia_booleana parentesis_st_cierra sentencia_logica boolean
+   47                   | boolean sentencia_logica parentesis_st_abre sentencia_booleana parentesis_st_cierra
+   48                   | sentencia_not parentesis_st_abre sentencia_booleana parentesis_st_cierra
+   49                   | sentencia_not boolean
+   50                   | sentencia_comparativa
+
+   51 sentencia_logica: Y
+   52                 | O
+
+   53 sentencia_not: NO
+   54              | NO sentencia_not
+
+   55 boolean: VERDADERO
+   56        | FALSO
+
+   57 sentencia_comparativa: valor comparador valor
+
+   58 comparador: MENOR
+   59           | MAYOR
+   60           | MAYOR_IGUAL
+   61           | MENOR_IGUAL
+   62           | IGUAL
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '(' (40) 21
+    ')' (41) 21
+    ':' (58) 37 39
+    '=' (61) 15 16 17 18 19
+    error (256)
+    FIN_LINEA (258) 5 43
+    DOS_PUNTOS (259)
+    MAS (260) 23
+    MENOS (261) 24
+    POR (262) 25
+    DIVIDIDO (263) 26
+    MOD (264) 27
+    VERDADERO (265) 55
+    FALSO (266) 56
+    MENOR (267) 58
+    MAYOR (268) 59
+    MENOR_IGUAL (269) 61
+    MAYOR_IGUAL (270) 60
+    IGUAL (271) 62
+    PARENTESIS_ABRE (272) 20 28
+    PARENTESIS_CIERRA (273) 20 29
+    MIENTRAS (274) 42
+    HAZ (275) 40
+    SI (276) 36
+    COMILLA (277)
+    Y (278) 51
+    O (279) 52
+    NO (280) 53 54
+    IMPRIMIR (281) 20 21
+    SINO (282)
+    NUMERO <numero> (283) 15 18 31
+    TEXTO <texto> (284) 17 19 20
+    VAR_NUMERO (285) 11 18
+    VAR_TEXTO (286) 12 19
+    NOMBRE <texto> (287) 11 12 15 16 17 18 19 21 30
+    FIN (288) 38 41
+
+
+Nonterminals, with rules where they appear
+
+    $accept (38)
+        on left: 0
+    S (39)
+        on left: 1
+        on right: 0
+    begin (40)
+        on left: 2
+        on right: 1
+    end (41)
+        on left: 3
+        on right: 1
+    CODE (42)
+        on left: 4 5 6
+        on right: 1 35 39
+    INSTRUCCION (43)
+        on left: 7 8 9 10
+        on right: 5
+    DECLARACION (44)
+        on left: 11 12
+        on right: 7
+    asignacion (45)
+        on left: 13 14
+        on right: 8
+    ASIGNACION_NUM (46)
+        on left: 15 16
+        on right: 13
+    ASIGNACION_TEXT (47)
+        on left: 17
+        on right: 14
+    declara_y_asigna (48)
+        on left: 18 19
+        on right: 9
+    print (49)
+        on left: 20 21
+        on right: 10
+    operacion (50)
+        on left: 22
+        on right: 16 32
+    operador (51)
+        on left: 23 24 25 26 27
+        on right: 22
+    parentesis_st_abre (52)
+        on left: 28
+        on right: 32 46 47 48
+    parentesis_st_cierra (53)
+        on left: 29
+        on right: 32 46 47 48
+    valor (54)
+        on left: 30 31 32
+        on right: 22 57
+    CONTROL_LOGICO (55)
+        on left: 33 34
+        on right: 6
+    super_si (56)
+        on left: 35
+        on right: 33
+    si_st (57)
+        on left: 36
+        on right: 35
+    entonces_haz (58)
+        on left: 37
+        on right: 35
+    fin_si (59)
+        on left: 38
+        on right: 35
+    super_haz (60)
+        on left: 39
+        on right: 34
+    haz_st (61)
+        on left: 40
+        on right: 39
+    fin_haz (62)
+        on left: 41
+        on right: 39
+    mientras_st (63)
+        on left: 42
+        on right: 39
+    fin_mientras (64)
+        on left: 43
+        on right: 39
+    sentencia_booleana (65)
+        on left: 44 45 46 47 48 49 50
+        on right: 35 39 46 47 48
+    sentencia_logica (66)
+        on left: 51 52
+        on right: 45 46 47
+    sentencia_not (67)
+        on left: 53 54
+        on right: 48 49 54
+    boolean (68)
+        on left: 55 56
+        on right: 44 45 46 47 49
+    sentencia_comparativa (69)
+        on left: 57
+        on right: 50
+    comparador (70)
+        on left: 58 59 60 61 62
+        on right: 57
+
+
+State 0
+
+    0 $accept: • S $end
+
+    $default  reduce using rule 2 (begin)
+
+    S      go to state 1
+    begin  go to state 2
+
+
+State 1
+
+    0 $accept: S • $end
+
+    $end  shift, and go to state 3
+
+
+State 2
+
+    1 S: begin • CODE end
+
+    HAZ         shift, and go to state 4
+    SI          shift, and go to state 5
+    IMPRIMIR    shift, and go to state 6
+    VAR_NUMERO  shift, and go to state 7
+    VAR_TEXTO   shift, and go to state 8
+    NOMBRE      shift, and go to state 9
+
+    $default  reduce using rule 4 (CODE)
+
+    CODE              go to state 10
+    INSTRUCCION       go to state 11
+    DECLARACION       go to state 12
+    asignacion        go to state 13
+    ASIGNACION_NUM    go to state 14
+    ASIGNACION_TEXT   go to state 15
+    declara_y_asigna  go to state 16
+    print             go to state 17
+    CONTROL_LOGICO    go to state 18
+    super_si          go to state 19
+    si_st             go to state 20
+    super_haz         go to state 21
+    haz_st            go to state 22
+
+
+State 3
+
+    0 $accept: S $end •
+
+    $default  accept
+
+
+State 4
+
+   40 haz_st: HAZ •
+
+    $default  reduce using rule 40 (haz_st)
+
+
+State 5
+
+   36 si_st: SI •
+
+    $default  reduce using rule 36 (si_st)
+
+
+State 6
+
+   20 print: IMPRIMIR • PARENTESIS_ABRE TEXTO PARENTESIS_CIERRA
+   21      | IMPRIMIR • '(' NOMBRE ')'
+
+    PARENTESIS_ABRE  shift, and go to state 23
+    '('              shift, and go to state 24
+
+
+State 7
+
+   11 DECLARACION: VAR_NUMERO • NOMBRE
+   18 declara_y_asigna: VAR_NUMERO • NOMBRE '=' NUMERO
+
+    NOMBRE  shift, and go to state 25
+
+
+State 8
+
+   12 DECLARACION: VAR_TEXTO • NOMBRE
+   19 declara_y_asigna: VAR_TEXTO • NOMBRE '=' TEXTO
+
+    NOMBRE  shift, and go to state 26
+
+
+State 9
+
+   15 ASIGNACION_NUM: NOMBRE • '=' NUMERO
+   16               | NOMBRE • '=' operacion
+   17 ASIGNACION_TEXT: NOMBRE • '=' TEXTO
+
+    '='  shift, and go to state 27
+
+
+State 10
+
+    1 S: begin CODE • end
+
+    $default  reduce using rule 3 (end)
+
+    end  go to state 28
+
+
+State 11
+
+    5 CODE: INSTRUCCION • FIN_LINEA
+
+    FIN_LINEA  shift, and go to state 29
+
+
+State 12
+
+    7 INSTRUCCION: DECLARACION •
+
+    $default  reduce using rule 7 (INSTRUCCION)
+
+
+State 13
+
+    8 INSTRUCCION: asignacion •
+
+    $default  reduce using rule 8 (INSTRUCCION)
+
+
+State 14
+
+   13 asignacion: ASIGNACION_NUM •
+
+    $default  reduce using rule 13 (asignacion)
+
+
+State 15
+
+   14 asignacion: ASIGNACION_TEXT •
+
+    $default  reduce using rule 14 (asignacion)
+
+
+State 16
+
+    9 INSTRUCCION: declara_y_asigna •
+
+    $default  reduce using rule 9 (INSTRUCCION)
+
+
+State 17
+
+   10 INSTRUCCION: print •
+
+    $default  reduce using rule 10 (INSTRUCCION)
+
+
+State 18
+
+    6 CODE: CONTROL_LOGICO •
+
+    $default  reduce using rule 6 (CODE)
+
+
+State 19
+
+   33 CONTROL_LOGICO: super_si •
+
+    $default  reduce using rule 33 (CONTROL_LOGICO)
+
+
+State 20
+
+   35 super_si: si_st • sentencia_booleana entonces_haz CODE fin_si
+
+    VERDADERO        shift, and go to state 30
+    FALSO            shift, and go to state 31
+    PARENTESIS_ABRE  shift, and go to state 32
+    NO               shift, and go to state 33
+    NUMERO           shift, and go to state 34
+    NOMBRE           shift, and go to state 35
+
+    parentesis_st_abre     go to state 36
+    valor                  go to state 37
+    sentencia_booleana     go to state 38
+    sentencia_not          go to state 39
+    boolean                go to state 40
+    sentencia_comparativa  go to state 41
+
+
+State 21
+
+   34 CONTROL_LOGICO: super_haz •
+
+    $default  reduce using rule 34 (CONTROL_LOGICO)
+
+
+State 22
+
+   39 super_haz: haz_st • ':' CODE fin_haz mientras_st sentencia_booleana fin_mientras
+
+    ':'  shift, and go to state 42
+
+
+State 23
+
+   20 print: IMPRIMIR PARENTESIS_ABRE • TEXTO PARENTESIS_CIERRA
+
+    TEXTO  shift, and go to state 43
+
+
+State 24
+
+   21 print: IMPRIMIR '(' • NOMBRE ')'
+
+    NOMBRE  shift, and go to state 44
+
+
+State 25
+
+   11 DECLARACION: VAR_NUMERO NOMBRE •
+   18 declara_y_asigna: VAR_NUMERO NOMBRE • '=' NUMERO
+
+    '='  shift, and go to state 45
+
+    $default  reduce using rule 11 (DECLARACION)
+
+
+State 26
+
+   12 DECLARACION: VAR_TEXTO NOMBRE •
+   19 declara_y_asigna: VAR_TEXTO NOMBRE • '=' TEXTO
+
+    '='  shift, and go to state 46
+
+    $default  reduce using rule 12 (DECLARACION)
+
+
+State 27
+
+   15 ASIGNACION_NUM: NOMBRE '=' • NUMERO
+   16               | NOMBRE '=' • operacion
+   17 ASIGNACION_TEXT: NOMBRE '=' • TEXTO
+
+    PARENTESIS_ABRE  shift, and go to state 32
+    NUMERO           shift, and go to state 47
+    TEXTO            shift, and go to state 48
+    NOMBRE           shift, and go to state 35
+
+    operacion           go to state 49
+    parentesis_st_abre  go to state 50
+    valor               go to state 51
+
+
+State 28
+
+    1 S: begin CODE end •
+
+    $default  reduce using rule 1 (S)
+
+
+State 29
+
+    5 CODE: INSTRUCCION FIN_LINEA •
+
+    $default  reduce using rule 5 (CODE)
+
+
+State 30
+
+   55 boolean: VERDADERO •
+
+    $default  reduce using rule 55 (boolean)
+
+
+State 31
+
+   56 boolean: FALSO •
+
+    $default  reduce using rule 56 (boolean)
+
+
+State 32
+
+   28 parentesis_st_abre: PARENTESIS_ABRE •
+
+    $default  reduce using rule 28 (parentesis_st_abre)
+
+
+State 33
+
+   53 sentencia_not: NO •
+   54              | NO • sentencia_not
+
+    NO  shift, and go to state 33
+
+    $default  reduce using rule 53 (sentencia_not)
+
+    sentencia_not  go to state 52
+
+
+State 34
+
+   31 valor: NUMERO •
+
+    $default  reduce using rule 31 (valor)
+
+
+State 35
+
+   30 valor: NOMBRE •
+
+    $default  reduce using rule 30 (valor)
+
+
+State 36
+
+   32 valor: parentesis_st_abre • operacion parentesis_st_cierra
+   46 sentencia_booleana: parentesis_st_abre • sentencia_booleana parentesis_st_cierra sentencia_logica boolean
+
+    VERDADERO        shift, and go to state 30
+    FALSO            shift, and go to state 31
+    PARENTESIS_ABRE  shift, and go to state 32
+    NO               shift, and go to state 33
+    NUMERO           shift, and go to state 34
+    NOMBRE           shift, and go to state 35
+
+    operacion              go to state 53
+    parentesis_st_abre     go to state 36
+    valor                  go to state 54
+    sentencia_booleana     go to state 55
+    sentencia_not          go to state 39
+    boolean                go to state 40
+    sentencia_comparativa  go to state 41
+
+
+State 37
+
+   57 sentencia_comparativa: valor • comparador valor
+
+    MENOR        shift, and go to state 56
+    MAYOR        shift, and go to state 57
+    MENOR_IGUAL  shift, and go to state 58
+    MAYOR_IGUAL  shift, and go to state 59
+    IGUAL        shift, and go to state 60
+
+    comparador  go to state 61
+
+
+State 38
+
+   35 super_si: si_st sentencia_booleana • entonces_haz CODE fin_si
+
+    ':'  shift, and go to state 62
+
+    entonces_haz  go to state 63
+
+
+State 39
+
+   48 sentencia_booleana: sentencia_not • parentesis_st_abre sentencia_booleana parentesis_st_cierra
+   49                   | sentencia_not • boolean
+
+    VERDADERO        shift, and go to state 30
+    FALSO            shift, and go to state 31
+    PARENTESIS_ABRE  shift, and go to state 32
+
+    parentesis_st_abre  go to state 64
+    boolean             go to state 65
+
+
+State 40
+
+   44 sentencia_booleana: boolean •
+   45                   | boolean • sentencia_logica boolean
+   47                   | boolean • sentencia_logica parentesis_st_abre sentencia_booleana parentesis_st_cierra
+
+    Y  shift, and go to state 66
+    O  shift, and go to state 67
+
+    $default  reduce using rule 44 (sentencia_booleana)
+
+    sentencia_logica  go to state 68
+
+
+State 41
+
+   50 sentencia_booleana: sentencia_comparativa •
+
+    $default  reduce using rule 50 (sentencia_booleana)
+
+
+State 42
+
+   39 super_haz: haz_st ':' • CODE fin_haz mientras_st sentencia_booleana fin_mientras
+
+    HAZ         shift, and go to state 4
+    SI          shift, and go to state 5
+    IMPRIMIR    shift, and go to state 6
+    VAR_NUMERO  shift, and go to state 7
+    VAR_TEXTO   shift, and go to state 8
+    NOMBRE      shift, and go to state 9
+
+    $default  reduce using rule 4 (CODE)
+
+    CODE              go to state 69
+    INSTRUCCION       go to state 11
+    DECLARACION       go to state 12
+    asignacion        go to state 13
+    ASIGNACION_NUM    go to state 14
+    ASIGNACION_TEXT   go to state 15
+    declara_y_asigna  go to state 16
+    print             go to state 17
+    CONTROL_LOGICO    go to state 18
+    super_si          go to state 19
+    si_st             go to state 20
+    super_haz         go to state 21
+    haz_st            go to state 22
+
+
+State 43
+
+   20 print: IMPRIMIR PARENTESIS_ABRE TEXTO • PARENTESIS_CIERRA
+
+    PARENTESIS_CIERRA  shift, and go to state 70
+
+
+State 44
+
+   21 print: IMPRIMIR '(' NOMBRE • ')'
+
+    ')'  shift, and go to state 71
+
+
+State 45
+
+   18 declara_y_asigna: VAR_NUMERO NOMBRE '=' • NUMERO
+
+    NUMERO  shift, and go to state 72
+
+
+State 46
+
+   19 declara_y_asigna: VAR_TEXTO NOMBRE '=' • TEXTO
+
+    TEXTO  shift, and go to state 73
+
+
+State 47
+
+   15 ASIGNACION_NUM: NOMBRE '=' NUMERO •
+   31 valor: NUMERO •
+
+    FIN_LINEA  reduce using rule 15 (ASIGNACION_NUM)
+    $default   reduce using rule 31 (valor)
+
+
+State 48
+
+   17 ASIGNACION_TEXT: NOMBRE '=' TEXTO •
+
+    $default  reduce using rule 17 (ASIGNACION_TEXT)
+
+
+State 49
+
+   16 ASIGNACION_NUM: NOMBRE '=' operacion •
+
+    $default  reduce using rule 16 (ASIGNACION_NUM)
+
+
+State 50
+
+   32 valor: parentesis_st_abre • operacion parentesis_st_cierra
+
+    PARENTESIS_ABRE  shift, and go to state 32
+    NUMERO           shift, and go to state 34
+    NOMBRE           shift, and go to state 35
+
+    operacion           go to state 53
+    parentesis_st_abre  go to state 50
+    valor               go to state 51
+
+
+State 51
+
+   22 operacion: valor • operador valor
+
+    MAS       shift, and go to state 74
+    MENOS     shift, and go to state 75
+    POR       shift, and go to state 76
+    DIVIDIDO  shift, and go to state 77
+    MOD       shift, and go to state 78
+
+    operador  go to state 79
+
+
+State 52
+
+   54 sentencia_not: NO sentencia_not •
+
+    $default  reduce using rule 54 (sentencia_not)
+
+
+State 53
+
+   32 valor: parentesis_st_abre operacion • parentesis_st_cierra
+
+    PARENTESIS_CIERRA  shift, and go to state 80
+
+    parentesis_st_cierra  go to state 81
+
+
+State 54
+
+   22 operacion: valor • operador valor
+   57 sentencia_comparativa: valor • comparador valor
+
+    MAS          shift, and go to state 74
+    MENOS        shift, and go to state 75
+    POR          shift, and go to state 76
+    DIVIDIDO     shift, and go to state 77
+    MOD          shift, and go to state 78
+    MENOR        shift, and go to state 56
+    MAYOR        shift, and go to state 57
+    MENOR_IGUAL  shift, and go to state 58
+    MAYOR_IGUAL  shift, and go to state 59
+    IGUAL        shift, and go to state 60
+
+    operador    go to state 79
+    comparador  go to state 61
+
+
+State 55
+
+   46 sentencia_booleana: parentesis_st_abre sentencia_booleana • parentesis_st_cierra sentencia_logica boolean
+
+    PARENTESIS_CIERRA  shift, and go to state 80
+
+    parentesis_st_cierra  go to state 82
+
+
+State 56
+
+   58 comparador: MENOR •
+
+    $default  reduce using rule 58 (comparador)
+
+
+State 57
+
+   59 comparador: MAYOR •
+
+    $default  reduce using rule 59 (comparador)
+
+
+State 58
+
+   61 comparador: MENOR_IGUAL •
+
+    $default  reduce using rule 61 (comparador)
+
+
+State 59
+
+   60 comparador: MAYOR_IGUAL •
+
+    $default  reduce using rule 60 (comparador)
+
+
+State 60
+
+   62 comparador: IGUAL •
+
+    $default  reduce using rule 62 (comparador)
+
+
+State 61
+
+   57 sentencia_comparativa: valor comparador • valor
+
+    PARENTESIS_ABRE  shift, and go to state 32
+    NUMERO           shift, and go to state 34
+    NOMBRE           shift, and go to state 35
+
+    parentesis_st_abre  go to state 50
+    valor               go to state 83
+
+
+State 62
+
+   37 entonces_haz: ':' •
+
+    $default  reduce using rule 37 (entonces_haz)
+
+
+State 63
+
+   35 super_si: si_st sentencia_booleana entonces_haz • CODE fin_si
+
+    HAZ         shift, and go to state 4
+    SI          shift, and go to state 5
+    IMPRIMIR    shift, and go to state 6
+    VAR_NUMERO  shift, and go to state 7
+    VAR_TEXTO   shift, and go to state 8
+    NOMBRE      shift, and go to state 9
+
+    $default  reduce using rule 4 (CODE)
+
+    CODE              go to state 84
+    INSTRUCCION       go to state 11
+    DECLARACION       go to state 12
+    asignacion        go to state 13
+    ASIGNACION_NUM    go to state 14
+    ASIGNACION_TEXT   go to state 15
+    declara_y_asigna  go to state 16
+    print             go to state 17
+    CONTROL_LOGICO    go to state 18
+    super_si          go to state 19
+    si_st             go to state 20
+    super_haz         go to state 21
+    haz_st            go to state 22
+
+
+State 64
+
+   48 sentencia_booleana: sentencia_not parentesis_st_abre • sentencia_booleana parentesis_st_cierra
+
+    VERDADERO        shift, and go to state 30
+    FALSO            shift, and go to state 31
+    PARENTESIS_ABRE  shift, and go to state 32
+    NO               shift, and go to state 33
+    NUMERO           shift, and go to state 34
+    NOMBRE           shift, and go to state 35
+
+    parentesis_st_abre     go to state 36
+    valor                  go to state 37
+    sentencia_booleana     go to state 85
+    sentencia_not          go to state 39
+    boolean                go to state 40
+    sentencia_comparativa  go to state 41
+
+
+State 65
+
+   49 sentencia_booleana: sentencia_not boolean •
+
+    $default  reduce using rule 49 (sentencia_booleana)
+
+
+State 66
+
+   51 sentencia_logica: Y •
+
+    $default  reduce using rule 51 (sentencia_logica)
+
+
+State 67
+
+   52 sentencia_logica: O •
+
+    $default  reduce using rule 52 (sentencia_logica)
+
+
+State 68
+
+   45 sentencia_booleana: boolean sentencia_logica • boolean
+   47                   | boolean sentencia_logica • parentesis_st_abre sentencia_booleana parentesis_st_cierra
+
+    VERDADERO        shift, and go to state 30
+    FALSO            shift, and go to state 31
+    PARENTESIS_ABRE  shift, and go to state 32
+
+    parentesis_st_abre  go to state 86
+    boolean             go to state 87
+
+
+State 69
+
+   39 super_haz: haz_st ':' CODE • fin_haz mientras_st sentencia_booleana fin_mientras
+
+    FIN  shift, and go to state 88
+
+    fin_haz  go to state 89
+
+
+State 70
+
+   20 print: IMPRIMIR PARENTESIS_ABRE TEXTO PARENTESIS_CIERRA •
+
+    $default  reduce using rule 20 (print)
+
+
+State 71
+
+   21 print: IMPRIMIR '(' NOMBRE ')' •
+
+    $default  reduce using rule 21 (print)
+
+
+State 72
+
+   18 declara_y_asigna: VAR_NUMERO NOMBRE '=' NUMERO •
+
+    $default  reduce using rule 18 (declara_y_asigna)
+
+
+State 73
+
+   19 declara_y_asigna: VAR_TEXTO NOMBRE '=' TEXTO •
+
+    $default  reduce using rule 19 (declara_y_asigna)
+
+
+State 74
+
+   23 operador: MAS •
+
+    $default  reduce using rule 23 (operador)
+
+
+State 75
+
+   24 operador: MENOS •
+
+    $default  reduce using rule 24 (operador)
+
+
+State 76
+
+   25 operador: POR •
+
+    $default  reduce using rule 25 (operador)
+
+
+State 77
+
+   26 operador: DIVIDIDO •
+
+    $default  reduce using rule 26 (operador)
+
+
+State 78
+
+   27 operador: MOD •
+
+    $default  reduce using rule 27 (operador)
+
+
+State 79
+
+   22 operacion: valor operador • valor
+
+    PARENTESIS_ABRE  shift, and go to state 32
+    NUMERO           shift, and go to state 34
+    NOMBRE           shift, and go to state 35
+
+    parentesis_st_abre  go to state 50
+    valor               go to state 90
+
+
+State 80
+
+   29 parentesis_st_cierra: PARENTESIS_CIERRA •
+
+    $default  reduce using rule 29 (parentesis_st_cierra)
+
+
+State 81
+
+   32 valor: parentesis_st_abre operacion parentesis_st_cierra •
+
+    $default  reduce using rule 32 (valor)
+
+
+State 82
+
+   46 sentencia_booleana: parentesis_st_abre sentencia_booleana parentesis_st_cierra • sentencia_logica boolean
+
+    Y  shift, and go to state 66
+    O  shift, and go to state 67
+
+    sentencia_logica  go to state 91
+
+
+State 83
+
+   57 sentencia_comparativa: valor comparador valor •
+
+    $default  reduce using rule 57 (sentencia_comparativa)
+
+
+State 84
+
+   35 super_si: si_st sentencia_booleana entonces_haz CODE • fin_si
+
+    FIN  shift, and go to state 92
+
+    fin_si  go to state 93
+
+
+State 85
+
+   48 sentencia_booleana: sentencia_not parentesis_st_abre sentencia_booleana • parentesis_st_cierra
+
+    PARENTESIS_CIERRA  shift, and go to state 80
+
+    parentesis_st_cierra  go to state 94
+
+
+State 86
+
+   47 sentencia_booleana: boolean sentencia_logica parentesis_st_abre • sentencia_booleana parentesis_st_cierra
+
+    VERDADERO        shift, and go to state 30
+    FALSO            shift, and go to state 31
+    PARENTESIS_ABRE  shift, and go to state 32
+    NO               shift, and go to state 33
+    NUMERO           shift, and go to state 34
+    NOMBRE           shift, and go to state 35
+
+    parentesis_st_abre     go to state 36
+    valor                  go to state 37
+    sentencia_booleana     go to state 95
+    sentencia_not          go to state 39
+    boolean                go to state 40
+    sentencia_comparativa  go to state 41
+
+
+State 87
+
+   45 sentencia_booleana: boolean sentencia_logica boolean •
+
+    $default  reduce using rule 45 (sentencia_booleana)
+
+
+State 88
+
+   41 fin_haz: FIN •
+
+    $default  reduce using rule 41 (fin_haz)
+
+
+State 89
+
+   39 super_haz: haz_st ':' CODE fin_haz • mientras_st sentencia_booleana fin_mientras
+
+    MIENTRAS  shift, and go to state 96
+
+    mientras_st  go to state 97
+
+
+State 90
+
+   22 operacion: valor operador valor •
+
+    $default  reduce using rule 22 (operacion)
+
+
+State 91
+
+   46 sentencia_booleana: parentesis_st_abre sentencia_booleana parentesis_st_cierra sentencia_logica • boolean
+
+    VERDADERO  shift, and go to state 30
+    FALSO      shift, and go to state 31
+
+    boolean  go to state 98
+
+
+State 92
+
+   38 fin_si: FIN •
+
+    $default  reduce using rule 38 (fin_si)
+
+
+State 93
+
+   35 super_si: si_st sentencia_booleana entonces_haz CODE fin_si •
+
+    $default  reduce using rule 35 (super_si)
+
+
+State 94
+
+   48 sentencia_booleana: sentencia_not parentesis_st_abre sentencia_booleana parentesis_st_cierra •
+
+    $default  reduce using rule 48 (sentencia_booleana)
+
+
+State 95
+
+   47 sentencia_booleana: boolean sentencia_logica parentesis_st_abre sentencia_booleana • parentesis_st_cierra
+
+    PARENTESIS_CIERRA  shift, and go to state 80
+
+    parentesis_st_cierra  go to state 99
+
+
+State 96
+
+   42 mientras_st: MIENTRAS •
+
+    $default  reduce using rule 42 (mientras_st)
+
+
+State 97
+
+   39 super_haz: haz_st ':' CODE fin_haz mientras_st • sentencia_booleana fin_mientras
+
+    VERDADERO        shift, and go to state 30
+    FALSO            shift, and go to state 31
+    PARENTESIS_ABRE  shift, and go to state 32
+    NO               shift, and go to state 33
+    NUMERO           shift, and go to state 34
+    NOMBRE           shift, and go to state 35
+
+    parentesis_st_abre     go to state 36
+    valor                  go to state 37
+    sentencia_booleana     go to state 100
+    sentencia_not          go to state 39
+    boolean                go to state 40
+    sentencia_comparativa  go to state 41
+
+
+State 98
+
+   46 sentencia_booleana: parentesis_st_abre sentencia_booleana parentesis_st_cierra sentencia_logica boolean •
+
+    $default  reduce using rule 46 (sentencia_booleana)
+
+
+State 99
+
+   47 sentencia_booleana: boolean sentencia_logica parentesis_st_abre sentencia_booleana parentesis_st_cierra •
+
+    $default  reduce using rule 47 (sentencia_booleana)
+
+
+State 100
+
+   39 super_haz: haz_st ':' CODE fin_haz mientras_st sentencia_booleana • fin_mientras
+
+    FIN_LINEA  shift, and go to state 101
+
+    fin_mientras  go to state 102
+
+
+State 101
+
+   43 fin_mientras: FIN_LINEA •
+
+    $default  reduce using rule 43 (fin_mientras)
+
+
+State 102
+
+   39 super_haz: haz_st ':' CODE fin_haz mientras_st sentencia_booleana fin_mientras •
+
+    $default  reduce using rule 39 (super_haz)

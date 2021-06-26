@@ -1,5 +1,6 @@
 %{
     #include "y.tab.h"
+    #include <string.h>
 %}
 
 FIN_LINEA ";"
@@ -66,7 +67,7 @@ NOMBRE [a-z|A-Z|0-9|_]+
 {IMPRIMIR} return IMPRIMIR;
 {SINO} return SINO;
 {NUMERO} {yylval.numero = atoi(yytext); return NUMERO;}
-{TEXTO} {yylval.texto = yytext; return TEXTO;}
+{TEXTO} {strcpy(yylval.texto, yytext); return TEXTO;}
 {VAR_TEXTO} return VAR_TEXTO;
 {VAR_NUMERO} return VAR_NUMERO;
 {NOMBRE} return NOMBRE;

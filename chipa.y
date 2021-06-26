@@ -4,10 +4,13 @@
     void yyerror(const char *s);
     
     int yylex();
+
 %}
 
+
+
 %union{
-    char* texto;
+    char texto[256];
     int numero;
 }
 
@@ -133,7 +136,7 @@ declara_y_asigna: VAR_NUMERO NOMBRE '=' NUMERO{
 
 
 print: IMPRIMIR PARENTESIS_ABRE  TEXTO PARENTESIS_CIERRA { printf("printf(%s);", $3) ; }; 
-        | IMPRIMIR '(' NOMBRE ')'{
+        | IMPRIMIR PARENTESIS_ABRE NOMBRE PARENTESIS_CIERRA{
             struct node* aux;
             if((aux=find($3)) != NULL){
                 if(aux->type == 1)
