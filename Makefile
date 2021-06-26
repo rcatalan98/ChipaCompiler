@@ -6,5 +6,7 @@ all:
 	gcc -o chipa.out lex.yy.c y.tab.c LinkedList.c -ly
 
 clean:
-	rm -f *.out *.o lex.yy.c y.tab.c y.tab.h y.output
-
+	rm -f *.out *.o lex.yy.c y.tab.c y.tab.h
+test:
+	./chipa.out < test.chipa > salida.c
+	gcc -w salida.c LinkedList.c -o ejecutable

@@ -1,1 +1,3 @@
-imprimir("hola");
+texto a;
+imprimir ("hola\n");
+texto b;

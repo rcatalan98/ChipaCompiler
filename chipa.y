@@ -1,10 +1,14 @@
 %{
     #include "LinkedList.h"
-
+    
     void yyerror(const char *s);
     
     int yylex();
+    list* l;
 
+    
+    char* empty = "";
+    int cero = 0;
 %}
 
 
@@ -57,40 +61,45 @@ begin: {printf("#include \"LinkedList.h\"\n int main() {");};
 
 end: {printf("}");};
 
-CODE: | INSTRUCCION FIN_LINEA | CONTROL_LOGICO;
+CODE: | instrucciones;
+
+instrucciones: INSTRUCCION FIN_LINEA | INSTRUCCION FIN_LINEA instrucciones
+        | CONTROL_LOGICO | CONTROL_LOGICO instrucciones;
 
 INSTRUCCION: 
     DECLARACION {}
     |asignacion {} 
     |declara_y_asigna {}
-    |print {}
+    |print {};
 
 DECLARACION: VAR_NUMERO NOMBRE {
-        if(find($2)!=NULL){
+        if(find(l,$2)!=NULL){
             yyerror("Variable ya definida");
             fprintf(stderr, "La variable ya se definio previamente");
             YYABORT;
         }
         else {
-            insert($2, 0, 1);
+            insert(l,$2, &cero, num);
         }
     }
-    | VAR_TEXTO NOMBRE  {     
-        if(find($2) != NULL){
-            yyerror("Variable ya definida");
-            fprintf(stderr, "La variable ya se definio previamente");
+    | VAR_TEXTO NOMBRE  {
+        
+        if(find(l,$2) != NULL){
+            yyerror("Variable ya definida\n");
+            fprintf(stderr, "La variable ya se definio previamente\n");
             YYABORT;
         }
         else {
-            insert($2, '\0', 0);
-        };
-    }
+            insert(l,$2, empty, text);
+        }
+        //$$ = $2;
+    };
 
 asignacion: ASIGNACION_NUM | ASIGNACION_TEXT;
 
 ASIGNACION_NUM:  NOMBRE '=' NUMERO{
     struct node* aux;
-    if((aux=find($1)) != NULL){
+    if((aux=find(l,$1)) != NULL){
         aux->data = (void *) &($3);
     }else{
         yyerror("La variable que se intento asignar no existe");
@@ -102,7 +111,7 @@ ASIGNACION_NUM:  NOMBRE '=' NUMERO{
 
 ASIGNACION_TEXT:  NOMBRE '=' TEXTO{
     struct node* aux;
-    if((aux=find($1)) != NULL){
+    if((aux=find(l,$1)) != NULL){
         aux->data = (void *)$3;
     }else{
         yyerror("La variable que se intento asignar no existe");
@@ -114,23 +123,23 @@ ASIGNACION_TEXT:  NOMBRE '=' TEXTO{
 
 declara_y_asigna: VAR_NUMERO NOMBRE '=' NUMERO{
     struct node* aux;
-        if(find($2)!=NULL){
+        if(find(l,$2)!=NULL){
             yyerror("Variable ya definida");
             fprintf(stderr, "La variable ya se definio previamente");
             YYABORT;
         }
         else {
-            insert($2, &($4), 1);
+            insert(l,$2, &($4), 1);
         }
     }
     |VAR_TEXTO NOMBRE '=' TEXTO{
-        if(find($2)!=NULL){
+        if(find(l,$2)!=NULL){
             yyerror("Variable ya definida");
             fprintf(stderr, "La variable ya se definio previamente");
             YYABORT;
         }
         else {
-            insert($2, $4, 0);
+            insert(l,$2, $4, 0);
         }
     };
 
@@ -138,7 +147,7 @@ declara_y_asigna: VAR_NUMERO NOMBRE '=' NUMERO{
 print: IMPRIMIR PARENTESIS_ABRE  TEXTO PARENTESIS_CIERRA { printf("printf(%s);", $3) ; }; 
         | IMPRIMIR PARENTESIS_ABRE NOMBRE PARENTESIS_CIERRA{
             struct node* aux;
-            if((aux=find($3)) != NULL){
+            if((aux=find(l,$3)) != NULL){
                 if(aux->type == 1)
                     printf("printf(\" %d \")", aux->data);
                 if(aux->type == 0)
@@ -166,7 +175,7 @@ parentesis_st_cierra: PARENTESIS_CIERRA{printf(" ) ");};
 
 valor: NOMBRE {
     struct node* aux;
-    if((aux=find($1)) != NULL) {
+    if((aux=find(l,$1)) != NULL) {
         if(aux->type != 1){
             yyerror("La variable que se intento usar no es un numero");
             //fprintf(stderr, "Error en la linea %d. La variable que se intento usar no es un numero", yylineno);
@@ -237,6 +246,7 @@ comparador: MENOR {printf("<");}
 
 
 int main(void) {
-    //list* symbolTable = (list*) malloc(sizeof(list));
+    l = createList();
     yyparse();
+    freeList(l);
 }

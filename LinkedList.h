@@ -12,22 +12,20 @@ struct node {
    struct node *next;
 };
 
-//typedef struct list{
-//    node* first=NULL;
-//    node* last=NULL;
-//    int size=0;
-//}list;
+typedef struct node *list;
 
-void printList();
+list *createList();
 
-void insert(char * key, void * data, int type);
+void printList(list *l);
+
+void insert(list* l,char * key, void * data, int type);
 
 bool isEmpty();
 
-int length();
-
-struct node* find(char * key);
+struct node* find(list* l, char * key);
 
 int getValueInt();
 
 char* getValueString();
+
+void freeList(list *l);
