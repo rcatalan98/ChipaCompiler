@@ -14,6 +14,7 @@
 %union{
     char texto[256];
     int numero;
+    char simbolo;
 }
 
 %token FIN_LINEA; 
@@ -47,7 +48,10 @@
 %token VAR_TEXTO; 
 %token <texto> NOMBRE;
 %token FIN;
-%token ASIGNACION;
+%token <texto> ASIGNACION;
+
+
+%type<texto> asignacion_st;
 
 
 %start S;
@@ -81,6 +85,7 @@ DECLARACION: VAR_NUMERO NOMBRE {
         }
         else {
             insert(l,$2, &cero, num);
+            printf("int %s;", $2);
         }
     }
     | VAR_TEXTO NOMBRE  {  
@@ -93,6 +98,7 @@ DECLARACION: VAR_NUMERO NOMBRE {
         }
         else {
             insert(l,$2, empty, text);
+            printf("char * %s;", $2);
         }
     };
 
@@ -102,18 +108,22 @@ ASIGNACION_NUM:  NOMBRE ASIGNACION NUMERO{
     struct node* aux;
     if((aux=find(l,$1)) != NULL){
         aux->data = &($3);
+        printf("%s=%d;", $1, $3);
     }else{
         yyerror("La variable que se intento asignar no existe");
         fprintf(stderr, "La variable que se intento asignar no existe");
         YYABORT;
     }
-}
-    | NOMBRE ASIGNACION operacion;
+};
+
+nombre_st: NOMBRE {printf("%s", $1);};
+asignacion_st: ASIGNACION {printf("=");};
 
 ASIGNACION_TEXT:  NOMBRE ASIGNACION TEXTO{
     struct node* aux;
     if((aux=find(l,$1)) != NULL){
         aux->data = (void *)$3;
+        printf("%s=%s;", $1, $3);
     }else{
         yyerror("La variable que se intento asignar no existe");
         //fprintf(stderr, "Error en la linea %d. La variable que se intento asignar no existe", yylineno);
@@ -131,6 +141,7 @@ declara_y_asigna: VAR_NUMERO NOMBRE ASIGNACION NUMERO{
         }
         else {
             insert(l,$2, &($4), 1);
+            printf("int %s = %d;", $2, $4);
         }
     }
     |VAR_TEXTO NOMBRE ASIGNACION TEXTO{
@@ -141,16 +152,16 @@ declara_y_asigna: VAR_NUMERO NOMBRE ASIGNACION NUMERO{
         }
         else {
             insert(l,$2, $4, 0);
+            printf("int %s = %s;", $2, $4);
         }
     };
-
 
 print: IMPRIMIR PARENTESIS_ABRE  TEXTO  PARENTESIS_CIERRA { printf("printf(%s);", $3) ; }
         | IMPRIMIR PARENTESIS_ABRE NOMBRE PARENTESIS_CIERRA{
             struct node* aux;
             if((aux=find(l,$3)) != NULL){
                 if(aux->type == num)
-                    printf("printf(\" %d \");", *((int *) aux->data));
+                    printf("printf(\"%%d\", %s);", aux->key);
                 if(aux->type == text)
                     printf("printf( %s );", aux->data);
                     
@@ -163,13 +174,14 @@ print: IMPRIMIR PARENTESIS_ABRE  TEXTO  PARENTESIS_CIERRA { printf("printf(%s);"
         };
 
 
-operacion: valor operador valor;
+operacion: valor operador valor{};
 
 operador: MAS{printf(" + ");}
         |MENOS{printf(" - ");}
         |POR{printf(" * ");}
         |DIVIDIDO{printf(" / ");}
-        |MOD{printf(" \% ");};
+        |MOD{printf(" %% ");};
+        
 
 parentesis_st_abre: PARENTESIS_ABRE{printf(" ( ");};
 parentesis_st_cierra: PARENTESIS_CIERRA{printf(" ) ");};
@@ -192,7 +204,9 @@ valor: NOMBRE {
             YYABORT; 
     } }
 
-    | NUMERO {printf("%d", $1);};
+    | NUMERO {
+        printf("%d", $1);
+        };
     | parentesis_st_abre operacion parentesis_st_cierra;
 
 CONTROL_LOGICO: super_si | super_haz;
@@ -241,8 +255,6 @@ comparador: MENOR {printf("<");}
         | MAYOR_IGUAL {printf(">=");}
         | MENOR_IGUAL {printf("<=");}
         | IGUAL{printf("==");};
-
-
 %%
 
 
