@@ -52,6 +52,7 @@
 
 
 %type<texto> asignacion_st;
+%type<texto> nombre_st;
 
 
 %start S;
@@ -104,7 +105,7 @@ DECLARACION: VAR_NUMERO NOMBRE {
 
 asignacion: ASIGNACION_NUM | ASIGNACION_TEXT;
 
-ASIGNACION_NUM:  NOMBRE ASIGNACION NUMERO{
+ASIGNACION_NUM: NOMBRE ASIGNACION NUMERO{
     struct node* aux;
     if((aux=find(l,$1)) != NULL){
         aux->data = &($3);
@@ -114,9 +115,16 @@ ASIGNACION_NUM:  NOMBRE ASIGNACION NUMERO{
         fprintf(stderr, "La variable que se intento asignar no existe");
         YYABORT;
     }
-};
+}
+    | nombre_asignacion_st operacion{
+        printf(";");
+    }
+;
 
 nombre_st: NOMBRE {printf("%s", $1);};
+
+nombre_asignacion_st: NOMBRE ASIGNACION {printf("%s =", $1);};
+
 asignacion_st: ASIGNACION {printf("=");};
 
 ASIGNACION_TEXT:  NOMBRE ASIGNACION TEXTO{
@@ -174,14 +182,13 @@ print: IMPRIMIR PARENTESIS_ABRE  TEXTO  PARENTESIS_CIERRA { printf("printf(%s);"
         };
 
 
-operacion: valor operador valor{};
+operacion: parentesis_st_abre valor operador valor parentesis_st_cierra;
 
 operador: MAS{printf(" + ");}
         |MENOS{printf(" - ");}
         |POR{printf(" * ");}
         |DIVIDIDO{printf(" / ");}
         |MOD{printf(" %% ");};
-        
 
 parentesis_st_abre: PARENTESIS_ABRE{printf(" ( ");};
 parentesis_st_cierra: PARENTESIS_CIERRA{printf(" ) ");};
@@ -206,8 +213,8 @@ valor: NOMBRE {
 
     | NUMERO {
         printf("%d", $1);
-        };
-    | parentesis_st_abre operacion parentesis_st_cierra;
+        }
+    | operacion ;
 
 CONTROL_LOGICO: super_si | super_haz;
 

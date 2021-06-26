@@ -1,3 +1,8 @@
-imprimir ("hasd");
-numero a;
-a=7+3;
+numero a=5;
+numero b=0;
+numer
+haz:
+imprimir (b);
+b =(b + 1);
+fin
+mientras b<a;
