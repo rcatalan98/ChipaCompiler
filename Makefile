@@ -10,14 +10,14 @@ clean:
 
 test:
 	./chipa.out < ./ejemplos/ejemplo1.chipa > ejemplo1.c
-	gcc -w -fsanitize=address -g salida.c LinkedList.c LinkedList.h -o ejemplo1
+	gcc -w -fsanitize=address -g ejemplo1.c LinkedList.c LinkedList.h -o ejemplo1
 	./chipa.out < ./ejemplos/ejemplo2.chipa > ejemplo1.c
-	gcc -w -fsanitize=address -g salida.c LinkedList.c LinkedList.h -o ejemplo2
+	gcc -w -fsanitize=address -g ejemplo2.c LinkedList.c LinkedList.h -o ejemplo2
 	./chipa.out < ./ejemplos/ejemplo3.chipa > ejemplo1.c
-	gcc -w -fsanitize=address -g salida.c LinkedList.c LinkedList.h -o ejemplo3
+	gcc -w -fsanitize=address -g ejemplo3.c LinkedList.c LinkedList.h -o ejemplo3
 	./chipa.out < ./ejemplos/ejemplo4.chipa > ejemplo4.c
-	gcc -w -fsanitize=address -g salida.c LinkedList.c LinkedList.h -o ejemplo4
+	gcc -w -fsanitize=address -g ejemplo4.c LinkedList.c LinkedList.h -o ejemplo4
 	./chipa.out < ./ejemplos/ejemplo5.chipa > ejemplo1.c
-	gcc -w -fsanitize=address -g salida.c LinkedList.c LinkedList.h -o ejemplo5
+	gcc -w -fsanitize=address -g ejemplo5.c LinkedList.c LinkedList.h -o ejemplo5
 cleanTest:
 	rm -f ejemplo1 ejemplo1.c ejemplo2 ejemplo2.c ejemplo3 ejemplo3.c ejemplo4 ejemplo4.c ejemplo5 ejemplo5.c
