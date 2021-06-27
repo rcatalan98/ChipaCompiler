@@ -17,9 +17,9 @@ void insert(list *l, char *key, int type)
    //create aux node
    struct node *aux = (struct node *)malloc(sizeof(struct node));
    int keyLen = strlen(key);
-   aux->key = (char *)malloc(sizeof(char) * keyLen);
+   aux->key = (char *)malloc(sizeof(char) * keyLen +1); //
 
-   strcpy((char *)aux->key, (char *)key);
+   strcpy((char *)aux->key, (char *)key); //
 
    aux->type = type;
 

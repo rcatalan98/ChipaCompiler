@@ -1,10 +1,17 @@
 %{
     #include "LinkedList.h"
+ 
+
+
     #define MAX_LENGTH 128
+
     void yyerror(const char *s);
     int i = 0;
     int yylex();
     list* l;
+    
+
+
 %}
 
 %union{
@@ -28,6 +35,7 @@
 %token MENOR_IGUAL; 
 %token MAYOR_IGUAL; 
 %token IGUAL; 
+%token DISTINTO;
 %token PARENTESIS_ABRE; 
 %token PARENTESIS_CIERRA; 
 %token MIENTRAS;
@@ -50,7 +58,6 @@
 %token CONCAT;
 %token COMA;
 
-
 %type<texto> asignacion_st;
 %type<texto> texto_st;
 %type<texto> operacion_texto;
@@ -62,9 +69,16 @@
 
 
 S: begin code end;
-begin: RECETA{printf("#include \"LinkedList.h\"\n int main() {\n");};
+begin: RECETA{
+    printf("#include \"LinkedList.h\" \n#include \"time.h\" \nfloat startTime; \nfloat endTime; \nint main() {\nstartTime = (float)clock();\n");
 
-end: {printf("}");};
+    };
+
+end: {
+    printf("\n\nendTime = (float)clock();\nfloat timeElapsed = (endTime - startTime)/CLOCKS_PER_SEC;\n");
+    printf("printf(\"Time elapsed: %%f seconds\", timeElapsed);");
+    printf("\n}");
+    };
 
 code: | instrucciones;
 
@@ -135,7 +149,8 @@ dec_nombre_st: VAR_NUMERO NOMBRE {
         }
         else {
             insert(l,$2, text);
-            printf("char * %s ", $2);
+            //printf("char %s[%d + 1] ", $2, MAX_LENGTH);
+            printf("char * %s", $2);
         }
 };
 asignacion_st: ASIGNACION {printf("=");};
@@ -205,10 +220,11 @@ fin_mientras: FIN_LINEA {printf(");\n");};
 
 sentencia_booleana: boolean
         |boolean sentencia_logica boolean
-        |parentesis_st_abre sentencia_booleana parentesis_st_cierra sentencia_logica boolean
+        |parentesis_st_abre sentencia_booleana parentesis_st_cierra sentencia_logica sentencia_booleana
         |boolean sentencia_logica parentesis_st_abre sentencia_booleana parentesis_st_cierra
         |sentencia_not parentesis_st_abre sentencia_booleana parentesis_st_cierra
         |sentencia_not boolean
+        |parentesis_st_abre sentencia_booleana parentesis_st_cierra
         |sentencia_comparativa;
 
 sentencia_logica: Y {printf("&&");}
@@ -226,22 +242,28 @@ comparador: MENOR {printf("<");}
         | MAYOR {printf(">");}
         | MAYOR_IGUAL {printf(">=");}
         | MENOR_IGUAL {printf("<=");}
-        | IGUAL{printf("==");};
+        | IGUAL{printf("==");}
+        | DISTINTO{printf("!=");};
 
 read: LEER PARENTESIS_ABRE NOMBRE PARENTESIS_CIERRA{
-     struct node * aux;// = find(l, $3);
+     struct node * aux;
      if((aux=find(l, $3)) == NULL){
         yyerror("La variable que se intento asignar no existe\n");
         fprintf(stderr, "La variable que se intento leer no existe\n");
         YYABORT;
-     } else if (aux->type != text) {
-        yyerror("La variable utilizada en leer no es de texto\n");
-        fprintf(stderr, "La variable que se intento leer no es de tipo texto");
-        YYABORT;
-     } 
-     printf("printf(\"Ingrese el texto a guardar en la variable %s: \");\n", $3);
-     printf(" %s = (char *) malloc(sizeof(char) * %d);\n", $3, MAX_LENGTH);
-     printf("scanf(\"%%s\", %s);\n", $3);
+     } else if (aux->type == text) {
+        printf(" char aux_sc%d[%d];\n", i ,MAX_LENGTH + 1);
+        //printf(" %s = (char *) malloc(sizeof(char) * %d);\n", $3, MAX_LENGTH + 1);
+        printf("scanf(\"%%s\", aux_sc%d);\n", i);
+        printf("%s  = aux_sc%d;\n", $3,i++);
+     } else if (aux->type == num) {
+        printf("scanf(\"%%d\", &%s);\n", $3);         
+     } else {
+        yyerror("Error en el tipo de dato de la variable\n");
+        fprintf(stderr, "Error en el tipo de dato de la variable\n");
+        YYABORT;         
+     }
+     
 };
 
 concat: concat_op operacion_texto {};
@@ -254,16 +276,19 @@ operacion_texto: PARENTESIS_ABRE valor_texto coma_st concat_op2 valor_texto PARE
 valor_texto: nombre_str_st {}
         | TEXTO {printf("%s", $1);};
 
-coma_st: COMA {printf(");\n");}
+coma_st: COMA {printf(");\n");
+//printf(",");
+};
 
 concat_op: CONCAT {
-    printf("char aux%d[%d] = \"\";\n", i, MAX_LENGTH);
+    printf("char aux%d[%d] = \"\";\n", i, MAX_LENGTH * 2);
     printf("strcat(aux%d,", i);
-}
+    //printf("strcat(");
+};
 
 concat_op2: {
     printf("strcat(aux%d,", i);
-}
+};
 %%
 
 

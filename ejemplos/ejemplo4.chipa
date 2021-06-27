@@ -1,0 +1,17 @@
+receta:
+imprimir("Ingrese un numero: \n");
+numero fact;
+leer (fact);
+numero init=fact;
+numero rta=1;
+
+haz:
+rta = (rta*fact);
+fact = (fact - 1);
+fin
+mientras fact>0;
+
+imprimir(init);
+imprimir("! = ");
+imprimir(rta);
+imprimir("\n");

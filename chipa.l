@@ -18,6 +18,7 @@ MAYOR ">"
 MENOR_IGUAL "<="
 MAYOR_IGUAL ">="
 IGUAL "=="
+DISTINTO "distinto "
 PARENTESIS_ABRE "("
 PARENTESIS_CIERRA ")"
 MIENTRAS "mientras "
@@ -82,6 +83,7 @@ COMA ","
 {LEER} return LEER;
 {CONCAT} return CONCAT;
 {COMA} return COMA;
+{DISTINTO} return DISTINTO;
 
 . ECHO;
 

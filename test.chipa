@@ -1,5 +1,0 @@
-receta:
-texto a = "hola ";
-texto b = "chau\n";
-concatenar (a, b);
-imprimir (a);

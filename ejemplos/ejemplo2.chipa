@@ -1,0 +1,58 @@
+receta:
+numero a;
+numero b;
+numero c;
+numero d;
+imprimir("ingrese 4 numeros: \n");
+leer (a);
+leer (b);
+leer (c);
+leer (d);
+
+
+
+si a>=b:
+    si a>=c:
+        si a>=d:
+            imprimir(a);
+            imprimir(" es el mayor\n");
+        fin
+        si d>a:
+            imprimir(d);
+            imprimir(" es el mayor\n");
+        fin        
+    fin
+    si c>a:
+        si c>=d:
+            imprimir(c);
+            imprimir(" es el mayor\n");
+        fin
+        si d>c:
+            imprimir(d);
+            imprimir(" es el mayor\n");
+        fin 
+    fin
+fin
+si b>a:
+    si b>=c:
+        si b>=d:
+            imprimir(b);
+            imprimir(" es el mayor\n");
+        fin
+        si d>b:
+            imprimir(d);
+            imprimir(" es el mayor\n");
+        fin        
+    fin
+    si c>b:
+        si c>=d:
+            imprimir(c);
+            imprimir(" es el mayor\n");
+        fin
+        si d>c:
+            imprimir(d);
+            imprimir(" es el mayor\n");
+        fin 
+    fin
+fin
+

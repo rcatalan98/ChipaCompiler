@@ -1,0 +1,22 @@
+receta:
+numero m;
+numero n;
+numero i = 2;
+numero flag = 0;
+imprimir ("inserte un numero, y te diré si es primo:\n");
+leer (n);
+m = (n/2);
+
+haz:
+    si (n mod i)==0:
+        imprimir ("El numero no es primo");
+        flag = 1;
+    fin
+i = (i+1);
+fin
+mientras (i<=m) y (flag distinto 1);
+
+si flag == 0:
+    imprimir ("El numero es primo");
+fin
+        
