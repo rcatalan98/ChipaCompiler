@@ -1,0 +1,6 @@
+receta:
+
+texto a;
+leer(a);
+imrpimir("el valor de a es: \n");
+imprimir(a);

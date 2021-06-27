@@ -1,6 +1,5 @@
-numero a=1;
-numero b=2;
-numero c=(0+1);
-numero d=a;
-numero e=(a+b);
-imprimir ( (a+b) );
+receta:
+texto a = "hola ";
+texto b = "chau\n";
+concatenar (a, b);
+imprimir (a);

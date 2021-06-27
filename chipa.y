@@ -1,14 +1,10 @@
 %{
     #include "LinkedList.h"
-    
+    #define MAX_LENGTH 128
     void yyerror(const char *s);
-    
+    int i = 0;
     int yylex();
     list* l;
-
-    
-    char* empty = "";
-    int cero = 0;
 %}
 
 %union{
@@ -17,6 +13,7 @@
     char simbolo;
 }
 
+%token RECETA
 %token FIN_LINEA; 
 %token DOS_PUNTOS; 
 %token MAS; 
@@ -49,52 +46,73 @@
 %token <texto> NOMBRE;
 %token FIN;
 %token <texto> ASIGNACION;
+%token LEER;
+%token CONCAT;
+%token COMA;
 
 
 %type<texto> asignacion_st;
 %type<texto> texto_st;
+%type<texto> operacion_texto;
+%type<texto> valor_texto;
 
 %start S;
 
 %%
 
 
-S: begin CODE end;
-begin: {printf("#include \"LinkedList.h\"\n int main() {\n");};
+S: begin code end;
+begin: RECETA{printf("#include \"LinkedList.h\"\n int main() {\n");};
 
 end: {printf("}");};
 
-CODE: | instrucciones;
+code: | instrucciones;
 
-instrucciones: INSTRUCCION FIN_LINEA | INSTRUCCION FIN_LINEA instrucciones
-        | CONTROL_LOGICO | CONTROL_LOGICO instrucciones;
+instrucciones: instruccion FIN_LINEA | instruccion FIN_LINEA instrucciones
+        | control_logico | control_logico instrucciones;
 
-INSTRUCCION: 
-    DECLARACION {}
-    |asignacion {} 
+instruccion: 
+    declaracion {}
+    |asignar {} 
     |declara_y_asigna {}
-    |print {};
+    |print {}
+    |read {}
+    |concat {};
 
-DECLARACION: dec_nombre_st {        
+declaracion: dec_nombre_st {        
         printf(";");
     };
 
-asignacion: nombre_st ASIGNACION_NUM | nombre_st ASIGNACION_TEXT;
+asignar: nombre_st asignacion_num | nombre_st asignacion_text;
 
-ASIGNACION_NUM:  asignacion_st valor{printf(";");};
+asignacion_num:  asignacion_st valor{printf(";");};
 
-ASIGNACION_TEXT:  asignacion_st texto_st{printf(";");};
+asignacion_text:  asignacion_st texto_st{printf(";");};
 
 nombre_st: NOMBRE {
     struct node* aux;
     if((aux=find(l,$1)) == NULL){
         yyerror("La variable que se intento asignar no existe");
-        //fprintf(stderr, "Error en la linea %d. La variable que se intento asignar no existe", yylineno);
-        fprintf(stderr, "Error en alguna linea, capo. La variable que se intento asignar no existe");
+        fprintf(stderr, "La variable que se intento asignar no existe");
         YYABORT;
     }else{
         printf("%s", $1);
     }
+};
+
+nombre_str_st: NOMBRE {
+    struct node* aux;
+    if((aux=find(l,$1)) == NULL){
+        yyerror("La variable que se intento asignar no existe");
+        fprintf(stderr, "La variable %s que se intento asignar no existe", $1);
+        printf("La variable %s que se intento asignar no existe", $1);
+        YYABORT;
+    }else if(aux->type != text){
+        yyerror("La variable que se intento acceder no es texto");
+        fprintf(stderr, "La variable %s que se intento acceder no es texto", $1);
+        YYABORT;
+    }
+    printf("%s", $1);
 };
 
 dec_nombre_st: VAR_NUMERO NOMBRE {
@@ -119,12 +137,12 @@ dec_nombre_st: VAR_NUMERO NOMBRE {
             insert(l,$2, text);
             printf("char * %s ", $2);
         }
-}
+};
 asignacion_st: ASIGNACION {printf("=");};
-texto_st: TEXTO {printf("%s", $1);}
+texto_st: TEXTO {printf("%s", $1);};
 
-declara_y_asigna: dec_nombre_st ASIGNACION_TEXT 
-    |dec_nombre_st ASIGNACION_NUM;
+declara_y_asigna: dec_nombre_st asignacion_text 
+    |dec_nombre_st asignacion_num;
 
 print: IMPRIMIR PARENTESIS_ABRE  TEXTO  PARENTESIS_CIERRA { printf("printf(%s);", $3) ; }
         | IMPRIMIR PARENTESIS_ABRE NOMBRE PARENTESIS_CIERRA{
@@ -137,8 +155,7 @@ print: IMPRIMIR PARENTESIS_ABRE  TEXTO  PARENTESIS_CIERRA { printf("printf(%s);"
                     
             } else {
                 yyerror("La variable que se intento imprimir no existe");
-                //fprintf(stderr, "Error en la linea %d. La variable que se intento imprimir no existe", yylineno);
-                fprintf(stderr, "Error en alguna linea, capo. La variable que se intento asignar no existe");
+                fprintf(stderr, "La variable que se intento imprimir no existe");
                 YYABORT;
             }
         };
@@ -164,7 +181,7 @@ valor:
     | parentesis_st_abre operacion parentesis_st_cierra
     | ;
 
-CONTROL_LOGICO: super_si | super_haz;
+control_logico: super_si | super_haz;
 
 super_si: si_st sentencia_booleana entonces_haz instrucciones fin_si;
 
@@ -210,6 +227,43 @@ comparador: MENOR {printf("<");}
         | MAYOR_IGUAL {printf(">=");}
         | MENOR_IGUAL {printf("<=");}
         | IGUAL{printf("==");};
+
+read: LEER PARENTESIS_ABRE NOMBRE PARENTESIS_CIERRA{
+     struct node * aux;// = find(l, $3);
+     if((aux=find(l, $3)) == NULL){
+        yyerror("La variable que se intento asignar no existe\n");
+        fprintf(stderr, "La variable que se intento leer no existe\n");
+        YYABORT;
+     } else if (aux->type != text) {
+        yyerror("La variable utilizada en leer no es de texto\n");
+        fprintf(stderr, "La variable que se intento leer no es de tipo texto");
+        YYABORT;
+     } 
+     printf("printf(\"Ingrese el texto a guardar en la variable %s: \");\n", $3);
+     printf(" %s = (char *) malloc(sizeof(char) * %d);\n", $3, MAX_LENGTH);
+     printf("scanf(\"%%s\", %s);\n", $3);
+};
+
+concat: concat_op operacion_texto {};
+
+operacion_texto: PARENTESIS_ABRE valor_texto coma_st concat_op2 valor_texto PARENTESIS_CIERRA{
+    printf(");\n");
+    printf("%s = aux%d;", $2, i++);
+};
+
+valor_texto: nombre_str_st {}
+        | TEXTO {printf("%s", $1);};
+
+coma_st: COMA {printf(");\n");}
+
+concat_op: CONCAT {
+    printf("char aux%d[%d] = \"\";\n", i, MAX_LENGTH);
+    printf("strcat(aux%d,", i);
+}
+
+concat_op2: {
+    printf("strcat(aux%d,", i);
+}
 %%
 
 

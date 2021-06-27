@@ -35,6 +35,10 @@ TEXTO ["][^\n\r]*["]
 NUMERO [-]?[0-9]+
 NOMBRE [a-z|A-Z|0-9|_]+
 ASIGNACION "="
+RECETA "receta:"
+LEER "leer "
+CONCAT "concatenar "
+COMA ","
 
 %%
 [\t] ECHO;
@@ -74,6 +78,11 @@ ASIGNACION "="
 {VAR_NUMERO} return VAR_NUMERO;
 {NOMBRE} {strcpy(yylval.texto, yytext); return NOMBRE;}
 {ASIGNACION} return ASIGNACION;
+{RECETA} return RECETA;
+{LEER} return LEER;
+{CONCAT} return CONCAT;
+{COMA} return COMA;
+
 . ECHO;
 
 %%
