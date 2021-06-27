@@ -1,13 +1,6 @@
 receta:
-imprimir("Escriba 4 mensajes para concatenar: \n");
-texto rta = " ";
-texto temp;
-numero i = 0;
-haz:
-    leer (temp);
-    concatenar (rta, temp);
-    i = (i+1);
-fin
-mientras (i < 4);
-concatenar (rta, " unas ganas de comer un chipa ...\n");
+imprimir("Escriba un mensaje para concatenar: \n");
+texto rta;
+leer (rta);
+concatenar (rta, ": unas ganas de comer un chipa...\n");
 imprimir (rta);

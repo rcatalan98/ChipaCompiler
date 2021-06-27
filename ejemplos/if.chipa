@@ -1,9 +1,0 @@
-receta:
-numero a=0;
-numero b=1;
-
-si a<b:
-imprimir(a);
-imprimir("es menor que");
-imrpimir(b);
-fin

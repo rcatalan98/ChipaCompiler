@@ -1,16 +1,12 @@
 %{
     #include "LinkedList.h"
  
-
-
     #define MAX_LENGTH 128
 
     void yyerror(const char *s);
     int i = 0;
     int yylex();
     list* l;
-    
-
 
 %}
 
@@ -70,13 +66,11 @@
 
 S: begin code end;
 begin: RECETA{
-    printf("#include \"LinkedList.h\" \n#include \"time.h\" \nfloat startTime; \nfloat endTime; \nint main() {\nstartTime = (float)clock();\n");
+    printf("#include \"LinkedList.h\" \nint main() {");
 
     };
 
 end: {
-    printf("\n\nendTime = (float)clock();\nfloat timeElapsed = (endTime - startTime)/CLOCKS_PER_SEC;\n");
-    printf("printf(\"Time elapsed: %%f seconds\", timeElapsed);");
     printf("\n}");
     };
 

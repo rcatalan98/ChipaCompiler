@@ -1,9 +1,0 @@
-receta:
-numero a = 5;
-numero b;
-numero res;
-b = ((60 + 2) - 2);
-numero c = (2 * 3);
-res = ((a + (b/c)) mod 3);
-imprimir(res);
-imprimir("\n");
